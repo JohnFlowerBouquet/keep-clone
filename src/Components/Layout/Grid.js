@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles, Modal } from "@material-ui/core";
+import { withStyles, Modal, Grid } from "@material-ui/core";
 import NoteLayout from "../Notes/NoteLayout";
 
 const styles = theme => ({
   root: {
-    display: "flex",
-    flexWrap: "wrap",
-    overflow: "hidden",
-    padding: "3rem"
+    margin: "3rem auto",
+    padding: "5px",
+    [theme.breakpoints.up("sm")]: {
+      margin: "0 auto",
+      padding: "0 10vw"
+    }
   },
   modal: {
     display: "flex",
@@ -17,7 +19,7 @@ const styles = theme => ({
   }
 });
 
-export class Grid extends Component {
+export class Table extends Component {
   handleModalClose = () => {
     this.props.onDeselect();
   };
@@ -33,11 +35,11 @@ export class Grid extends Component {
     } = this.props;
 
     return (
-      <div className={classes.root}>
+      <Grid className={classes.root} container justify="flex-start">
         {notes.map(not =>
           editMode && note.id === not.id ? (
             <>
-              <div key={not.title} style={{ width: "260px" }} />
+              <Grid item key={not.title} style={{ width: "260px" }} />
               <Modal
                 key={note.id}
                 open={editMode}
@@ -54,18 +56,24 @@ export class Grid extends Component {
               </Modal>
             </>
           ) : (
-            <div key={not.id} onClick={() => onSelect(not.id)}>
+            <Grid
+              item
+              xs={12}
+              sm={"auto"}
+              key={not.id}
+              onClick={() => onSelect(not.id)}
+            >
               <NoteLayout key={not.id} note={not} onUpdate={onUpdate} />
-            </div>
+            </Grid>
           )
         )}
-      </div>
+      </Grid>
     );
   }
 }
 
-Grid.propTypes = {
+Table.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Grid);
+export default withStyles(styles)(Table);

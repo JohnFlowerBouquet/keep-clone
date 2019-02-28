@@ -9,7 +9,16 @@ class App extends Component {
   state = {
     Notes,
     note: {},
-    editMode: false
+    editMode: false,
+    isOpen: false,
+    type: ""
+  };
+
+  handleClick = type => {
+    this.setState(() => ({
+      type: type,
+      isOpen: true
+    }));
   };
 
   handleNoteSelectEdit = id =>
@@ -31,10 +40,20 @@ class App extends Component {
       ]
     }));
 
-  handleAddNote = addedNote =>
-    this.setState(({ Notes }) => ({
-      Notes: [...Notes, addedNote]
-    }));
+  handleAddNote = addedNote => {
+    if (addedNote.title || addedNote.text || addedNote.tasks.length > 1) {
+      this.setState(({ Notes }) => ({
+        Notes: [...Notes, { ...addedNote, id: new Date().getTime() }],
+        isOpen: false,
+        type: ""
+      }));
+    } else {
+      this.setState(() => ({
+        isOpen: false,
+        type: ""
+      }));
+    }
+  };
 
   render() {
     const { Notes } = this.state;
@@ -42,7 +61,12 @@ class App extends Component {
       <React.Fragment>
         <CssBaseline />
         <Header />
-        <NoteInput onAdd={this.handleAddNote} />
+        <NoteInput
+          onAdd={this.handleAddNote}
+          isOpen={this.state.isOpen}
+          type={this.state.type}
+          handleClick={this.handleClick}
+        />
         <Grid
           notes={Notes}
           onSelect={this.handleNoteSelectEdit}

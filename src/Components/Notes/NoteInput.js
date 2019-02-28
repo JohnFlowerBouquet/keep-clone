@@ -14,16 +14,20 @@ import {
   InsertPhotoOutlined
 } from "@material-ui/icons";
 
-import Checklist from "./List";
+import Checklist from "./Checklist";
 
-const styles = {
+const styles = theme => ({
   root: {
-    padding: "2px 4px",
     display: "flex",
     flexWrap: "wrap",
     alignItems: "center",
-    width: 400,
-    margin: "5rem auto"
+    width: 300,
+    margin: "5rem auto",
+    padding: 0,
+    [theme.breakpoints.up("sm")]: {
+      margin: "5rem auto",
+      width: 400
+    }
   },
   input: {
     display: "block",
@@ -32,76 +36,86 @@ const styles = {
     flex: 1
   },
   inputActive: {
-    width: 400,
+    width: 300,
     marginBottom: 10,
-    flex: "initial"
+    flex: "initial",
+    [theme.breakpoints.up("sm")]: {
+      width: 400
+    }
   },
   iconButton: {
-    padding: 10
+    padding: 5
   }
-};
+});
 
 export default withStyles(styles)(
   class extends Component {
-    state = {
-      isOpen: false,
-      type: "",
-      note: {
-        title: "",
-        text: "",
-        tasks: []
-      }
-    };
+    state = this.getInitialState();
 
-    handleClick = type => {
-      this.setState(() => ({
-        type: type,
-        isOpen: true
+    getInitialState() {
+      const { note } = this.props;
+      return note
+        ? note
+        : {
+            text: "",
+            title: "",
+            tasks: [
+              {
+                text: "",
+                isDone: false,
+                id: new Date().getTime()
+              }
+            ]
+          };
+    }
+
+    handleCheck = id => {
+      this.setState(({ tasks }) => ({
+        tasks: tasks.map(task =>
+          task.id === id ? { ...task, isDone: !task.isDone } : task
+        )
       }));
     };
 
     handleClickAway = () => {
-      if (this.state.isOpen) {
-        (this.state.note.title !== "" || this.state.note.text) &&
-          this.props.onAdd(this.state.note);
-        this.setState(() => ({
-          isOpen: false,
-          note: {
-            title: "",
-            text: "",
-            tasks: []
-          }
-        }));
+      const { isOpen } = this.props;
+      if (isOpen) {
+        const newNote = this.state;
+        newNote.tasks.pop();
+        this.props.onAdd(newNote);
       }
+      this.setState(() => this.getInitialState());
     };
 
     handleChange = ({ target: { value, name } }) =>
-      this.setState(({ note }) => ({
-        note: Object.assign(note, {
-          [name]: value
-        })
+      this.setState(() => ({
+        [name]: value
       }));
 
-    /*handleAddingTask = () =>
-      this.setState(({ note: { text, tasks } }) => ({
-        note: Object.assign(note, {
-          tasks: [...tasks, text]
-        })
-      }));*/
+    handleTaskChange = ({ target: { value, id } }) => {
+      this.setState(({ tasks }) => ({
+        tasks: tasks.map(task =>
+          task.id.toString() === id ? { ...task, text: value } : task
+        )
+      }));
+    };
+
+    handleTaskAdd = e => {
+      this.handleTaskChange(e);
+      this.setState(({ tasks }) => ({
+        tasks: [...tasks, { text: "", isDone: false, id: new Date().getTime() }]
+      }));
+    };
 
     render() {
-      const {
-        isOpen,
-        type,
-        note: { title, text }
-      } = this.state;
-      const { classes } = this.props;
+      const { title, text, tasks } = this.state;
+      const { classes, handleClick, type, isOpen } = this.props;
       let Input;
       if (!isOpen) {
         Input = (
           <Typography
             className={classes.input}
-            onClick={() => this.handleClick("note")}
+            onClick={() => handleClick("note")}
           >
             Create Note...
           </Typography>
@@ -120,7 +134,14 @@ export default withStyles(styles)(
             />
           );
         } else if (type === "list") {
-          Input = <Checklist text={text} handleChange={this.handleChange} />;
+          Input = (
+            <Checklist
+              tasks={tasks}
+              handleCheck={this.handleCheck}
+              handleTaskAdd={this.handleTaskAdd}
+              handleTaskChange={this.handleTaskChange}
+            />
+          );
         }
       }
 
@@ -144,7 +165,7 @@ export default withStyles(styles)(
               <>
                 <IconButton
                   color="primary"
-                  onClick={() => this.handleClick("list")}
+                  onClick={() => handleClick("list")}
                   className={classes.iconButton}
                   aria-label="Add List Note"
                   name="list"

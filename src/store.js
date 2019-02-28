@@ -7,11 +7,13 @@ export const Notes = [
     deadline: "December 25, 2025",
     tasks: [
       {
-        name: "Clean the House",
+        id: "41314",
+        text: "Clean the House",
         isDone: false
       },
       {
-        name: "Wash the car",
+        id: "41351",
+        text: "Wash the car",
         isDone: false
       }
     ]
@@ -24,11 +26,13 @@ export const Notes = [
     deadline: "December 25, 2025",
     tasks: [
       {
-        name: "adasdsa",
+        id: "41831",
+        text: "adasdsa",
         isDone: false
       },
       {
-        name: "aweqweqw",
+        id: "41031",
+        text: "aweqweqw",
         isDone: true
       }
     ]
@@ -41,11 +45,13 @@ export const Notes = [
     deadline: "December 25, 2025",
     tasks: [
       {
-        name: "adasdsa",
+        id: "41131",
+        text: "adasdsa",
         isDone: false
       },
       {
-        name: "aweqweqw",
+        id: "41431",
+        text: "aweqweqw",
         isDone: true
       }
     ]

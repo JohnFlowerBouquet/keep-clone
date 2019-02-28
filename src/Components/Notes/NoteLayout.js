@@ -18,15 +18,22 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    margin: theme.spacing.unit * 0.5,
-    width: "250px"
+    margin: theme.spacing.unit,
+    [theme.breakpoints.up("sm")]: {
+      width: "250px"
+    }
   },
   title: {
-    marginBottom: "1rem",
     cursor: "default"
   },
   text: {
     cursor: "default"
+  },
+  item: {
+    padding: "0"
+  },
+  itemCheckbox: {
+    padding: "4"
   }
 });
 
@@ -44,16 +51,16 @@ class NoteLayout extends React.Component {
     );
   }
 
-  handleCheck(name) {
+  handleCheck = id => {
     this.setState(
       ({ tasks }) => ({
         tasks: tasks.map(task =>
-          task.name === name ? { name: task.name, isDone: !task.isDone } : task
+          task.id === id ? { ...task, isDone: !task.isDone } : task
         )
       }),
       () => this.props.onUpdate(this.state)
     );
-  }
+  };
   render() {
     const { classes } = this.props,
       { title, tasks, text } = this.state;
@@ -63,19 +70,19 @@ class NoteLayout extends React.Component {
           {title}
         </Typography>
         <List className={classes.list}>
-          {tasks.map(({ name, isDone }) => (
-            <ListItem key={name} className={classes.item}>
+          {tasks.map(({ text, isDone, id }) => (
+            <ListItem key={id} className={classes.item}>
               <Checkbox
                 className={classes.itemCheckbox}
                 checked={isDone}
                 onClick={e => {
                   e.stopPropagation();
-                  this.handleCheck(name);
+                  this.handleCheck(id);
                 }}
                 checkedIcon={<CheckBoxOutlined />}
                 disableRipple
               />
-              <ListItemText className={classes.itemText} primary={name} />
+              <ListItemText className={classes.itemText} primary={text} />
               <ListItemSecondaryAction />
             </ListItem>
           ))}

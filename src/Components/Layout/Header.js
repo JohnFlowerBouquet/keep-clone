@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import { AppBar, Typography, IconButton, withStyles } from "@material-ui/core/";
-import {
-  Menu,
-  Description,
-  Search,
-  ViewAgendaOutlined,
-  Settings
-} from "@material-ui/icons";
+import { Menu, Description, Search } from "@material-ui/icons";
 
 const styles = theme => ({
   root: {
@@ -14,9 +8,12 @@ const styles = theme => ({
     color: "#7f7777",
     background: "#fff"
   },
-  iconButton: {
-    margin: 8,
-    cursor: "pointer"
+  icon: {
+    margin: 0,
+    cursor: "pointer",
+    [theme.breakpoints.up("sm")]: {
+      margin: 8
+    }
   }
 });
 
@@ -28,7 +25,7 @@ export class Header extends Component {
         <div style={{ float: "left", display: "flex", alignItems: "center" }}>
           <IconButton
             color="primary"
-            className={classes.iconButton}
+            className={classes.icon}
             aria-label="Menu"
           >
             <Menu />
@@ -47,26 +44,10 @@ export class Header extends Component {
           <IconButton
             color="primary"
             disabled
-            className={classes.iconButton}
+            className={classes.icon}
             aria-label="Search"
           >
             <Search />
-          </IconButton>
-          <IconButton
-            color="primary"
-            disabled
-            className={classes.iconButton}
-            aria-label="Change View"
-          >
-            <ViewAgendaOutlined />
-          </IconButton>
-          <IconButton
-            color="primary"
-            disabled
-            className={classes.iconButton}
-            aria-label="Settings"
-          >
-            <Settings />
           </IconButton>
         </div>
       </AppBar>
