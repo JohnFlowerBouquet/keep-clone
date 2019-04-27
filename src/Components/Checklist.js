@@ -13,13 +13,22 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    margin: theme.spacing.unit * 0.5,
-    width: "400"
+    margin: theme.spacing.unit * 0.5
   },
-  input: {
-    marginLeft: 5
+  list: {
+    width: "100%"
   }
 });
+
+const StyledInput = withStyles({
+  root: {
+    marginLeft: 8,
+    width: "100%"
+  },
+  inputMultiline: {
+    overflow: "hidden"
+  }
+})(InputBase);
 
 class Checklist extends Component {
   render() {
@@ -31,16 +40,15 @@ class Checklist extends Component {
       handleCheck
     } = this.props;
     return (
-      <List>
+      <List className={classes.list}>
         {tasks.map(({ text, isDone, id }, index, tasks) => {
           const last = index === tasks.length - 1;
           return (
-            <ListItem key={id} className={classes.item}>
+            <ListItem key={id}>
               {last ? (
                 <Add />
               ) : (
                 <Checkbox
-                  className={classes.itemCheckbox}
                   checked={isDone}
                   checkedIcon={<CheckBoxOutlined />}
                   disableRipple
@@ -50,7 +58,7 @@ class Checklist extends Component {
                   }}
                 />
               )}
-              <InputBase
+              <StyledInput
                 label="List Item"
                 name="text"
                 autoComplete="off"
@@ -59,6 +67,7 @@ class Checklist extends Component {
                 className={classes.input}
                 value={text}
                 id={id.toString()}
+                multiline
               />
             </ListItem>
           );

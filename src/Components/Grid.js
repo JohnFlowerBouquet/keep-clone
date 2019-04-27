@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles, Modal, Grid } from "@material-ui/core";
-import NoteLayout from "../Notes/NoteLayout";
+import Note from "../templates/Note";
 
 const styles = theme => ({
   root: {
@@ -46,7 +46,7 @@ export class Table extends Component {
                 onClose={this.handleModalClose}
                 className={classes.modal}
               >
-                <NoteLayout
+                <Note
                   tabindex="-1"
                   key={not.id}
                   note={not}
@@ -63,7 +63,7 @@ export class Table extends Component {
               key={not.id}
               onClick={() => onSelect(not.id)}
             >
-              <NoteLayout key={not.id} note={not} onUpdate={onUpdate} />
+              <Note key={not.id} note={not} onUpdate={onUpdate} />
             </Grid>
           )
         )}

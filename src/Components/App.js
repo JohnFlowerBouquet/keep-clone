@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { withStyles, CssBaseline } from "@material-ui/core";
-import Header from "./Layout/Header";
-import NoteInput from "./Notes/NoteInput";
-import Grid from "./Layout/Grid";
+import Header from "./Header";
+import NoteInput from "./AddNote";
+import Grid from "./Grid";
 import { Notes } from "../store";
 
 class App extends Component {

@@ -29,24 +29,34 @@ const styles = theme => ({
       width: 400
     }
   },
-  input: {
-    display: "block",
-    fontWeight: "bold",
-    marginLeft: 8,
-    flex: 1
+  textContainer: {
+    flex: 1,
+    padding: "12px 16px"
   },
-  inputActive: {
-    width: 300,
-    marginBottom: 10,
-    flex: "initial",
-    [theme.breakpoints.up("sm")]: {
-      width: 400
-    }
+  text: {
+    fontWeight: "bold"
   },
   iconButton: {
     padding: 5
   }
 });
+
+const StyledInput = withStyles(theme => ({
+  root: {
+    display: "block",
+    marginLeft: 8,
+    width: 400,
+    marginBottom: 10,
+    fontWeight: "bold",
+    padding: "12px 16px",
+    [theme.breakpoints.up("sm")]: {
+      width: "100%"
+    }
+  },
+  inputMultiline: {
+    overflow: "hidden"
+  }
+}))(InputBase);
 
 export default withStyles(styles)(
   class extends Component {
@@ -87,10 +97,11 @@ export default withStyles(styles)(
       this.setState(() => this.getInitialState());
     };
 
-    handleChange = ({ target: { value, name } }) =>
+    handleChange = ({ target: { value, name } }) => {
       this.setState(() => ({
         [name]: value
       }));
+    };
 
     handleTaskChange = ({ target: { value, id } }) => {
       this.setState(({ tasks }) => ({
@@ -113,24 +124,26 @@ export default withStyles(styles)(
       let Input;
       if (!isOpen) {
         Input = (
-          <Typography
-            className={classes.input}
-            onClick={() => handleClick("note")}
-          >
-            Create Note...
-          </Typography>
+          <div className={classes.textContainer}>
+            <Typography
+              className={classes.text}
+              onClick={() => handleClick("note")}
+            >
+              Create Note...
+            </Typography>
+          </div>
         );
       } else {
         if (type === "note") {
           Input = (
-            <InputBase
+            <StyledInput
               label="Note"
               autoComplete="off"
-              className={[classes.input, classes.inputActive].join(" ")}
               value={text}
               name="text"
               onChange={this.handleChange}
               placeholder="Create Note..."
+              multiline
             />
           );
         } else if (type === "list") {
@@ -147,22 +160,23 @@ export default withStyles(styles)(
 
       return (
         <ClickAwayListener onClickAway={this.handleClickAway}>
-          <Paper className={classes.root} elevation={1}>
+          <Paper className={classes.root} elevation={1} display="flex">
             {isOpen && (
-              <InputBase
+              <StyledInput
                 label="Title"
                 autoComplete="off"
-                className={[classes.input, classes.inputActive].join(" ")}
                 value={title}
                 name="title"
                 placeholder={"Add Title..."}
                 onChange={this.handleChange}
+                multiline
+                fullWidth
               />
             )}
             {Input}
 
             {!isOpen && (
-              <>
+              <div className={classes.buttonsContainer}>
                 <IconButton
                   color="primary"
                   onClick={() => handleClick("list")}
@@ -188,7 +202,7 @@ export default withStyles(styles)(
                 >
                   <InsertPhotoOutlined />
                 </IconButton>
-              </>
+              </div>
             )}
           </Paper>
         </ClickAwayListener>

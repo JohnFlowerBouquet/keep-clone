@@ -19,12 +19,14 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
     margin: theme.spacing.unit,
+    transition: "all 0.5s ease",
     [theme.breakpoints.up("sm")]: {
       width: "250px"
     }
   },
   title: {
-    cursor: "default"
+    cursor: "default",
+    overflowWrap: "break-word"
   },
   text: {
     cursor: "default"
@@ -32,12 +34,15 @@ const styles = theme => ({
   item: {
     padding: "0"
   },
+  itemText: {
+    overflowWrap: "break-word"
+  },
   itemCheckbox: {
     padding: "4"
   }
 });
 
-class NoteLayout extends React.Component {
+class Note extends React.Component {
   state = this.getInitState();
 
   getInitState() {
@@ -87,7 +92,12 @@ class NoteLayout extends React.Component {
             </ListItem>
           ))}
           {text && (
-            <InputBase className={classes.text} multiline value={text} />
+            <InputBase
+              className={classes.text}
+              multiline
+              fullWidth
+              value={text}
+            />
           )}
         </List>
       </Paper>
@@ -95,8 +105,8 @@ class NoteLayout extends React.Component {
   }
 }
 
-NoteLayout.propTypes = {
+Note.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(NoteLayout);
+export default withStyles(styles)(Note);
