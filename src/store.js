@@ -8,8 +8,8 @@ export const Notes = [
     tasks: [
       {
         id: "41314",
-        text: "Clean the House",
-        isDone: false
+        text: "Clean the courtyard",
+        isDone: true
       },
       {
         id: "41351",
@@ -27,13 +27,13 @@ export const Notes = [
     tasks: [
       {
         id: "41831",
-        text: "adasdsa",
+        text: "Workout",
         isDone: false
       },
       {
         id: "41031",
-        text: "aweqweqw",
-        isDone: true
+        text: "Job interview",
+        isDone: false
       }
     ]
   },
@@ -46,12 +46,12 @@ export const Notes = [
     tasks: [
       {
         id: "41131",
-        text: "adasdsa",
+        text: "CoC Session",
         isDone: false
       },
       {
         id: "41431",
-        text: "aweqweqw",
+        text: "Bike Trip",
         isDone: true
       }
     ]
@@ -64,6 +64,6 @@ export const Notes = [
     deadline: "December 25, 2025",
     tasks: [],
     text:
-      "This is my secret note: asdasdasdasdasdasdasdasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaadq qw qweqe 1123213 dasdaa !"
+      "This is my secret note: 59 6f 75 20 61 72 65 20 61 77 65 73 6f 6d 65 21"
   }
 ];

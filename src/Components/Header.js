@@ -23,13 +23,13 @@ export class Header extends Component {
     return (
       <AppBar className={classes.root}>
         <div style={{ float: "left", display: "flex", alignItems: "center" }}>
-          <IconButton
+          {/* <IconButton
             color="primary"
             className={classes.icon}
             aria-label="Menu"
           >
-            <Menu />
-          </IconButton>
+          <Menu /> 
+          </IconButton>*/}
           <Description style={{ color: "#f4b607", fontSize: 32, margin: 8 }} />
 
           <Typography

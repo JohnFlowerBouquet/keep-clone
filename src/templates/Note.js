@@ -6,7 +6,6 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemSecondaryAction,
   ListItemText,
   Checkbox,
   InputBase
@@ -24,15 +23,27 @@ const styles = theme => ({
       width: "250px"
     }
   },
+  list: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  list__item: {
+    padding: "0"
+  },
+  list__itemDone: {
+    order: "1",
+    padding: "0",
+    textDecoration: "line-through",
+    color: "#5f6368"
+  },
   title: {
     cursor: "default",
     overflowWrap: "break-word"
   },
   text: {
-    cursor: "default"
-  },
-  item: {
-    padding: "0"
+    cursor: "default",
+    overflowWrap: "break-word",
+    overflow: "hidden"
   },
   itemText: {
     overflowWrap: "break-word"
@@ -41,6 +52,16 @@ const styles = theme => ({
     padding: "4"
   }
 });
+
+const StyledInput = withStyles(theme => ({
+  root: {
+    cursor: "default",
+    overflowWrap: "break-word"
+  },
+  inputMultiline: {
+    overflow: "hidden"
+  }
+}))(InputBase);
 
 class Note extends React.Component {
   state = this.getInitState();
@@ -69,36 +90,31 @@ class Note extends React.Component {
   render() {
     const { classes } = this.props,
       { title, tasks, text } = this.state;
+    const lastTask = tasks.length - 1;
     return (
       <Paper className={classes.root} elevation={1}>
         <Typography className={classes.title} variant="h6" component="h3">
           {title}
         </Typography>
         <List className={classes.list}>
-          {tasks.map(({ text, isDone, id }) => (
-            <ListItem key={id} className={classes.item}>
+          {tasks.map(({ text, isDone, id }, index) => (
+            <ListItem
+              key={id}
+              className={isDone ? classes.list__itemDone : classes.list__item}
+              divider
+            >
               <Checkbox
-                className={classes.itemCheckbox}
                 checked={isDone}
                 onClick={e => {
                   e.stopPropagation();
                   this.handleCheck(id);
                 }}
                 checkedIcon={<CheckBoxOutlined />}
-                disableRipple
               />
               <ListItemText className={classes.itemText} primary={text} />
-              <ListItemSecondaryAction />
             </ListItem>
           ))}
-          {text && (
-            <InputBase
-              className={classes.text}
-              multiline
-              fullWidth
-              value={text}
-            />
-          )}
+          {text && <StyledInput multiline fullWidth value={text} />}
         </List>
       </Paper>
     );

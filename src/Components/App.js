@@ -8,7 +8,7 @@ import { Notes } from "../store";
 class App extends Component {
   state = {
     Notes,
-    note: {},
+    actvieNote: {},
     editMode: false,
     isOpen: false,
     type: ""
@@ -23,13 +23,13 @@ class App extends Component {
 
   handleNoteSelectEdit = id =>
     this.setState(({ Notes }) => ({
-      note: Notes.find(note => note.id === id),
+      actvieNote: Notes.find(note => note.id === id),
       editMode: true
     }));
 
   handleNoteCloseEdit = () =>
     this.setState(() => ({
-      note: {},
+      actvieNote: {},
       editMode: false
     }));
 
@@ -73,7 +73,7 @@ class App extends Component {
           onDeselect={this.handleNoteCloseEdit}
           onUpdate={this.handleUpdateNotes}
           editMode={this.state.editMode}
-          note={this.state.note}
+          actvieNote={this.state.actvieNote}
         />
       </React.Fragment>
     );

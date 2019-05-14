@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles, Modal, Grid } from "@material-ui/core";
 import Note from "../templates/Note";
+import EditNote from "./EditNote";
 
 const styles = theme => ({
   root: {
@@ -28,42 +29,34 @@ export class Table extends Component {
       classes,
       notes,
       onSelect,
-      onCheck,
       onUpdate,
       editMode,
-      note
+      actvieNote
     } = this.props;
 
     return (
       <Grid className={classes.root} container justify="flex-start">
-        {notes.map(not =>
-          editMode && note.id === not.id ? (
-            <>
-              <Grid item key={not.title} style={{ width: "260px" }} />
+        {notes.map(note =>
+          editMode && actvieNote.id === note.id ? (
+            <React.Fragment key={actvieNote.id}>
+              <Grid item style={{ width: "260px" }} />
               <Modal
-                key={note.id}
                 open={editMode}
                 onClose={this.handleModalClose}
                 className={classes.modal}
               >
-                <Note
-                  tabindex="-1"
-                  key={not.id}
-                  note={not}
-                  onCheck={onCheck}
-                  onUpdate={onUpdate}
-                />
+                <EditNote tabIndex="-1" note={note} onUpdate={onUpdate} />
               </Modal>
-            </>
+            </React.Fragment>
           ) : (
             <Grid
               item
               xs={12}
               sm={"auto"}
-              key={not.id}
-              onClick={() => onSelect(not.id)}
+              key={note.id}
+              onClick={() => onSelect(note.id)}
             >
-              <Note key={not.id} note={not} onUpdate={onUpdate} />
+              <Note key={note.id} note={note} onUpdate={onUpdate} />
             </Grid>
           )
         )}
