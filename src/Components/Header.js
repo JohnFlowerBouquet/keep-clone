@@ -1,55 +1,51 @@
 import React, { Component } from "react";
-import { AppBar, Typography, IconButton, withStyles } from "@material-ui/core/";
-import { Menu, Description, Search } from "@material-ui/icons";
+import { AppBar, Typography, withStyles } from "@material-ui/core/";
+import { Description } from "@material-ui/icons";
+import SearchBar from "./SearchBar";
 
 const styles = theme => ({
   root: {
-    display: "inline-block",
+    display: "flex",
+    flexDirection: "row",
     color: "#7f7777",
     background: "#fff"
   },
+  container: {
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+    width: "120px",
+    [theme.breakpoints.up("sm")]: {
+      margin: 8,
+      width: "auto"
+    }
+  },
   icon: {
     margin: 0,
-    cursor: "pointer",
     [theme.breakpoints.up("sm")]: {
       margin: 8
+    }
+  },
+  title: {
+    fontSize: "1rem",
+    [theme.breakpoints.up("sm")]: {
+      fontSize: "1.5rem"
     }
   }
 });
 
 export class Header extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, handleSearch, wordToMatch } = this.props;
     return (
       <AppBar className={classes.root}>
-        <div style={{ float: "left", display: "flex", alignItems: "center" }}>
-          {/* <IconButton
-            color="primary"
-            className={classes.icon}
-            aria-label="Menu"
-          >
-          <Menu /> 
-          </IconButton>*/}
+        <div className={classes.container}>
           <Description style={{ color: "#f4b607", fontSize: 32, margin: 8 }} />
-
-          <Typography
-            style={{ cursor: "default" }}
-            variant="h5"
-            color="inherit"
-          >
+          <Typography className={classes.title} variant="h5" color="inherit">
             Keep-clone
           </Typography>
         </div>
-        <div style={{ float: "right" }}>
-          <IconButton
-            color="primary"
-            disabled
-            className={classes.icon}
-            aria-label="Search"
-          >
-            <Search />
-          </IconButton>
-        </div>
+        <SearchBar handleSearch={handleSearch} wordToMatch={wordToMatch} />
       </AppBar>
     );
   }

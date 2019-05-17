@@ -8,6 +8,8 @@ import { Notes } from "../store";
 class App extends Component {
   state = {
     Notes,
+    searchResults: null,
+    wordToMatch: "",
     actvieNote: {},
     editMode: false,
     isOpen: false,
@@ -54,13 +56,25 @@ class App extends Component {
       }));
     }
   };
+  handleDeleteNote = id =>
+    this.setState(({ Notes }) => ({
+      Notes: [...Notes.filter(note => note.id !== id)]
+    }));
+
+  handleSearch = wordToMatch =>
+    this.setState(() => ({
+      wordToMatch: wordToMatch
+    }));
 
   render() {
-    const { Notes } = this.state;
+    const { Notes, wordToMatch } = this.state;
     return (
       <React.Fragment>
         <CssBaseline />
-        <Header />
+        <Header
+          handleSearch={this.handleSearch}
+          wordToMatch={this.state.wordToMatch}
+        />
         <NoteInput
           onAdd={this.handleAddNote}
           isOpen={this.state.isOpen}
@@ -74,6 +88,8 @@ class App extends Component {
           onUpdate={this.handleUpdateNotes}
           editMode={this.state.editMode}
           actvieNote={this.state.actvieNote}
+          onDelete={this.handleDeleteNote}
+          wordToMatch={wordToMatch}
         />
       </React.Fragment>
     );

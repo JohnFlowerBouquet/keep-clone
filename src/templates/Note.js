@@ -8,9 +8,10 @@ import {
   ListItem,
   ListItemText,
   Checkbox,
-  InputBase
+  InputBase,
+  IconButton
 } from "@material-ui/core";
-import { CheckBoxOutlined } from "@material-ui/icons";
+import { CheckBoxOutlined, Delete } from "@material-ui/icons";
 
 const styles = theme => ({
   root: {
@@ -88,9 +89,8 @@ class Note extends React.Component {
     );
   };
   render() {
-    const { classes } = this.props,
-      { title, tasks, text } = this.state;
-    const lastTask = tasks.length - 1;
+    const { classes, handleDeleteNote } = this.props,
+      { title, tasks, text, id } = this.state;
     return (
       <Paper className={classes.root} elevation={1}>
         <Typography className={classes.title} variant="h6" component="h3">
@@ -116,6 +116,17 @@ class Note extends React.Component {
           ))}
           {text && <StyledInput multiline fullWidth value={text} />}
         </List>
+        <IconButton
+          color="primary"
+          className={classes.iconButton}
+          aria-label="Directions"
+          onClick={e => {
+            e.stopPropagation();
+            handleDeleteNote(id);
+          }}
+        >
+          <Delete />
+        </IconButton>
       </Paper>
     );
   }

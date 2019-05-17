@@ -24,9 +24,11 @@ const styles = theme => ({
     width: 300,
     margin: "5rem auto",
     padding: 0,
+    boxShadow:
+      "0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149)",
     [theme.breakpoints.up("sm")]: {
       margin: "5rem auto",
-      width: 400
+      width: 600
     }
   },
   textContainer: {
@@ -34,7 +36,9 @@ const styles = theme => ({
     padding: "12px 16px"
   },
   text: {
-    fontWeight: "bold"
+    fontWeight: "500",
+    fontSize: "1rem",
+    color: "#80868b"
   },
   iconButton: {
     padding: 5
@@ -87,12 +91,13 @@ export default withStyles(styles)(
       }));
     };
 
-    handleClickAway = () => {
+    handleClickAway = e => {
       const { isOpen } = this.props;
       if (isOpen) {
         const newNote = this.state;
         newNote.tasks.pop();
         this.props.onAdd(newNote);
+        e.preventDefault();
       }
       this.setState(() => this.getInitialState());
     };

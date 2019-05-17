@@ -31,12 +31,22 @@ export class Table extends Component {
       onSelect,
       onUpdate,
       editMode,
-      actvieNote
+      actvieNote,
+      onDelete,
+      wordToMatch
     } = this.props;
+
+    const searchResults = () => {
+      const regex = new RegExp(wordToMatch, "i");
+      return wordToMatch ? notes.filter(note => note.title.match(regex)) : null;
+    };
+
+    const renderNotes = searchResults() ? searchResults() : notes;
+    console.log(renderNotes);
 
     return (
       <Grid className={classes.root} container justify="flex-start">
-        {notes.map(note =>
+        {renderNotes.map(note =>
           editMode && actvieNote.id === note.id ? (
             <React.Fragment key={actvieNote.id}>
               <Grid item style={{ width: "260px" }} />
@@ -56,7 +66,12 @@ export class Table extends Component {
               key={note.id}
               onClick={() => onSelect(note.id)}
             >
-              <Note key={note.id} note={note} onUpdate={onUpdate} />
+              <Note
+                key={note.id}
+                note={note}
+                onUpdate={onUpdate}
+                handleDeleteNote={onDelete}
+              />
             </Grid>
           )
         )}

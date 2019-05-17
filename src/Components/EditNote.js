@@ -53,104 +53,104 @@ const StyledInput = withStyles(theme => ({
   }
 }))(InputBase);
 
-export default withStyles(styles)(
-  class extends Component {
-    state = {
-      ...this.props.note,
-      tasks: [
-        ...this.props.note.tasks,
-        { text: "", isDone: false, id: new Date().getTime() }
-      ]
-    };
+class EditNote extends Component {
+  state = {
+    ...this.props.note,
+    tasks: [
+      ...this.props.note.tasks,
+      { text: "", isDone: false, id: new Date().getTime() }
+    ]
+  };
 
-    handleCheck = id => {
-      this.setState(({ tasks }) => ({
-        tasks: tasks.map(task =>
-          task.id === id ? { ...task, isDone: !task.isDone } : task
-        )
-      }));
-    };
+  handleCheck = id => {
+    this.setState(({ tasks }) => ({
+      tasks: tasks.map(task =>
+        task.id === id ? { ...task, isDone: !task.isDone } : task
+      )
+    }));
+  };
 
-    handleClickAway = () => {
-      const editedNote = this.state;
-      editedNote.tasks.pop();
-      this.props.onUpdate(editedNote);
-    };
+  handleClickAway = () => {
+    const editedNote = this.state;
+    editedNote.tasks.pop();
+    this.props.onUpdate(editedNote);
+  };
 
-    handleChange = ({ target: { value, name } }) => {
-      this.setState(() => ({
-        [name]: value
-      }));
-    };
+  handleChange = ({ target: { value, name } }) => {
+    this.setState(() => ({
+      [name]: value
+    }));
+  };
 
-    handleTaskChange = ({ target: { value, id } }) => {
-      this.setState(({ tasks }) => ({
-        tasks: tasks.map(task =>
-          task.id.toString() === id ? { ...task, text: value } : task
-        )
-      }));
-    };
+  handleTaskChange = ({ target: { value, id } }) => {
+    this.setState(({ tasks }) => ({
+      tasks: tasks.map(task =>
+        task.id.toString() === id ? { ...task, text: value } : task
+      )
+    }));
+  };
 
-    handleTaskAdd = e => {
-      this.handleTaskChange(e);
-      this.setState(({ tasks }) => ({
-        tasks: [...tasks, { text: "", isDone: false, id: new Date().getTime() }]
-      }));
-    };
+  handleTaskAdd = e => {
+    this.handleTaskChange(e);
+    this.setState(({ tasks }) => ({
+      tasks: [...tasks, { text: "", isDone: false, id: new Date().getTime() }]
+    }));
+  };
 
-    render() {
-      const { title, text, tasks } = this.state;
-      const { classes, handleClick } = this.props;
-      let Input;
-      if (text) {
-        Input = (
-          <StyledInput
-            label="Note"
-            autoComplete="off"
-            value={text}
-            name="text"
-            onChange={this.handleChange}
-            placeholder="Create Note..."
-            multiline
-          />
-        );
-      } else if (tasks.length > 0) {
-        Input = (
-          <Checklist
-            tasks={tasks}
-            handleCheck={this.handleCheck}
-            handleTaskAdd={this.handleTaskAdd}
-            handleTaskChange={this.handleTaskChange}
-          />
-        );
-      }
-
-      return (
-        <ClickAwayListener onClickAway={this.handleClickAway}>
-          <Paper className={classes.root} elevation={1} display="flex">
-            <StyledInput
-              label="Title"
-              autoComplete="off"
-              value={title}
-              name="title"
-              placeholder={"Add Title..."}
-              onChange={this.handleChange}
-              multiline
-              fullWidth
-            />
-            {Input}
-            <IconButton
-              color="primary"
-              onClick={() => handleClick("list")}
-              className={classes.iconButton}
-              aria-label="Add List Note"
-              name="list"
-            >
-              <ColorLens />
-            </IconButton>
-          </Paper>
-        </ClickAwayListener>
+  render() {
+    const { title, text, tasks } = this.state;
+    const { classes, handleClick } = this.props;
+    let Input;
+    if (text) {
+      Input = (
+        <StyledInput
+          label="Note"
+          autoComplete="off"
+          value={text}
+          name="text"
+          onChange={this.handleChange}
+          placeholder="Create Note..."
+          multiline
+        />
+      );
+    } else if (tasks.length > 0) {
+      Input = (
+        <Checklist
+          tasks={tasks}
+          handleCheck={this.handleCheck}
+          handleTaskAdd={this.handleTaskAdd}
+          handleTaskChange={this.handleTaskChange}
+        />
       );
     }
+
+    return (
+      <ClickAwayListener onClickAway={this.handleClickAway}>
+        <Paper className={classes.root} elevation={1} display="flex">
+          <StyledInput
+            label="Title"
+            autoComplete="off"
+            value={title}
+            name="title"
+            placeholder={"Add Title..."}
+            onChange={this.handleChange}
+            multiline
+            fullWidth
+          />
+          {Input}
+          <IconButton
+            color="primary"
+            onClick={() => handleClick("list")}
+            className={classes.iconButton}
+            aria-label="Add List Note"
+            name="list"
+          >
+            <ColorLens />
+          </IconButton>
+        </Paper>
+      </ClickAwayListener>
+    );
   }
-);
+}
+
+export default withStyles(styles)(EditNote);
