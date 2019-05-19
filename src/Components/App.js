@@ -3,6 +3,7 @@ import { withStyles, CssBaseline } from "@material-ui/core";
 import Header from "./Header";
 import NoteInput from "./AddNote";
 import Grid from "./Grid";
+import ModalComponent from "./Modal";
 import { Notes } from "../store";
 
 class App extends Component {
@@ -67,7 +68,7 @@ class App extends Component {
     }));
 
   render() {
-    const { Notes, wordToMatch } = this.state;
+    const { Notes, wordToMatch, editMode, actvieNote } = this.state;
     return (
       <React.Fragment>
         <CssBaseline />
@@ -84,12 +85,16 @@ class App extends Component {
         <Grid
           notes={Notes}
           onSelect={this.handleNoteSelectEdit}
-          onDeselect={this.handleNoteCloseEdit}
           onUpdate={this.handleUpdateNotes}
-          editMode={this.state.editMode}
-          actvieNote={this.state.actvieNote}
+          editedNoteID={this.state.actvieNote.id}
           onDelete={this.handleDeleteNote}
           wordToMatch={wordToMatch}
+        />
+        <ModalComponent
+          editMode={editMode}
+          onDeselect={this.handleNoteCloseEdit}
+          onUpdate={this.handleUpdateNotes}
+          actvieNote={actvieNote}
         />
       </React.Fragment>
     );
@@ -103,3 +108,10 @@ const styles = {
 };
 
 export default withStyles(styles)(App);
+
+/*editMode && actvieNote.id === note.id ? (
+            <React.Fragment key={actvieNote.id}>
+              <Grid item style={{ width: "260px" }} />
+              
+            </React.Fragment>
+          )*/

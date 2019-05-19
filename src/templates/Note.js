@@ -8,7 +8,6 @@ import {
   ListItem,
   ListItemText,
   Checkbox,
-  InputBase,
   IconButton
 } from "@material-ui/core";
 import { CheckBoxOutlined, Delete } from "@material-ui/icons";
@@ -54,16 +53,6 @@ const styles = theme => ({
   }
 });
 
-const StyledInput = withStyles(theme => ({
-  root: {
-    cursor: "default",
-    overflowWrap: "break-word"
-  },
-  inputMultiline: {
-    overflow: "hidden"
-  }
-}))(InputBase);
-
 class Note extends React.Component {
   state = this.getInitState();
 
@@ -88,13 +77,35 @@ class Note extends React.Component {
       () => this.props.onUpdate(this.state)
     );
   };
+
+  getHighlightedText(text, higlight) {
+    let parts = text.split(new RegExp(`(${higlight})`, "gi"));
+    return (
+      <span>
+        {" "}
+        {parts.map((part, i) => (
+          <span
+            key={i}
+            style={
+              part.toLowerCase() === higlight.toLowerCase()
+                ? { backgroundColor: "#FB8C00" }
+                : {}
+            }
+          >
+            {part}
+          </span>
+        ))}{" "}
+      </span>
+    );
+  }
+
   render() {
-    const { classes, handleDeleteNote } = this.props,
+    const { classes, handleDeleteNote, wordToMatch } = this.props,
       { title, tasks, text, id } = this.state;
     return (
       <Paper className={classes.root} elevation={1}>
         <Typography className={classes.title} variant="h6" component="h3">
-          {title}
+          {wordToMatch ? this.getHighlightedText(title, wordToMatch) : title}
         </Typography>
         <List className={classes.list}>
           {tasks.map(({ text, isDone, id }, index) => (
@@ -111,10 +122,21 @@ class Note extends React.Component {
                 }}
                 checkedIcon={<CheckBoxOutlined />}
               />
-              <ListItemText className={classes.itemText} primary={text} />
+              <ListItemText
+                className={classes.itemText}
+                primary={
+                  wordToMatch
+                    ? this.getHighlightedText(text, wordToMatch)
+                    : text
+                }
+              />
             </ListItem>
           ))}
-          {text && <StyledInput multiline fullWidth value={text} />}
+          {text && (
+            <Typography variant="body2" component="p">
+              {wordToMatch ? this.getHighlightedText(text, wordToMatch) : text}
+            </Typography>
+          )}
         </List>
         <IconButton
           color="primary"
