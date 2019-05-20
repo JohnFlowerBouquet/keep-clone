@@ -6,9 +6,7 @@ import {
   ClickAwayListener,
   IconButton
 } from "@material-ui/core/";
-
 import { ColorLens } from "@material-ui/icons";
-
 import Checklist from "./Checklist";
 
 const styles = theme => ({

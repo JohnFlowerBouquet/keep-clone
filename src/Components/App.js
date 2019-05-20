@@ -6,6 +6,12 @@ import Grid from "./Grid";
 import ModalComponent from "./Modal";
 import { Notes } from "../store";
 
+const styles = {
+  root: {
+    padding: "3rem"
+  }
+};
+
 class App extends Component {
   state = {
     Notes,
@@ -86,9 +92,9 @@ class App extends Component {
           notes={Notes}
           onSelect={this.handleNoteSelectEdit}
           onUpdate={this.handleUpdateNotes}
-          editedNoteID={this.state.actvieNote.id}
+          editedNoteID={actvieNote.id}
           onDelete={this.handleDeleteNote}
-          wordToMatch={wordToMatch}
+          wordToMatch={wordToMatch.toUpperCase()}
         />
         <ModalComponent
           editMode={editMode}
@@ -101,17 +107,4 @@ class App extends Component {
   }
 }
 
-const styles = {
-  root: {
-    padding: "3rem"
-  }
-};
-
 export default withStyles(styles)(App);
-
-/*editMode && actvieNote.id === note.id ? (
-            <React.Fragment key={actvieNote.id}>
-              <Grid item style={{ width: "260px" }} />
-              
-            </React.Fragment>
-          )*/

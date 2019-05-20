@@ -30,9 +30,25 @@ export class Table extends Component {
     } = this.props;
 
     const searchResults = () => {
-      const regex = new RegExp(wordToMatch, "i");
-      return wordToMatch ? notes.filter(note => note.title.match(regex)) : null;
+      return wordToMatch
+        ? notes.filter(note => {
+            if (note.text) {
+              return (
+                note.title.toUpperCase().includes(wordToMatch) |
+                note.text.toUpperCase().includes(wordToMatch)
+              );
+            } else {
+              return (
+                note.title.toUpperCase().includes(wordToMatch) |
+                note.tasks.some(task =>
+                  task.text.toUpperCase().includes(wordToMatch)
+                )
+              );
+            }
+          })
+        : null;
     };
+
     const renderNotes = searchResults() ? searchResults() : notes;
     return (
       <Grid className={classes.root} container justify="flex-start">
@@ -42,15 +58,15 @@ export class Table extends Component {
             xs={12}
             sm={"auto"}
             key={note.id}
-            onClick={() => onSelect(note.id)}
+            className={note.id === editedNoteID ? classes.ghost : null}
           >
             <Note
               key={note.id}
               note={note}
-              className={note.id === editedNoteID ? classes.ghost : null}
               wordToMatch={wordToMatch}
               onUpdate={onUpdate}
-              handleDeleteNote={onDelete}
+              onDelete={onDelete}
+              onSelect={onSelect}
             />
           </Grid>
         ))}

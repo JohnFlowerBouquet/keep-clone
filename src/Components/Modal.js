@@ -19,7 +19,11 @@ const ModalComponent = ({
 }) => {
   return (
     <Modal open={editMode} onClose={onDeselect} className={classes.modal}>
-      <EditNote tabIndex="-1" note={actvieNote} onUpdate={onUpdate} />
+      <EditNote
+        tabIndex="-1"
+        note={actvieNote}
+        onUpdate={() => onUpdate(actvieNote)}
+      />
     </Modal>
   );
 };

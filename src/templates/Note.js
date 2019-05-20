@@ -78,7 +78,7 @@ class Note extends React.Component {
     );
   };
 
-  getHighlightedText(text, higlight) {
+  getHighlightedText = (text, higlight) => {
     let parts = text.split(new RegExp(`(${higlight})`, "gi"));
     return (
       <span>
@@ -97,13 +97,27 @@ class Note extends React.Component {
         ))}{" "}
       </span>
     );
-  }
+  };
+
+  onSelect = id => {
+    this.setState(
+      () => ({
+        active: true
+      }),
+      this.props.onSelect(id)
+    );
+  };
 
   render() {
-    const { classes, handleDeleteNote, wordToMatch } = this.props,
-      { title, tasks, text, id } = this.state;
+    const { classes, onDelete, wordToMatch } = this.props,
+      { title, tasks, text, id, active } = this.state;
     return (
-      <Paper className={classes.root} elevation={1}>
+      <Paper
+        className={classes.root}
+        styles={active ? { visibility: "hidden" } : null}
+        elevation={1}
+        onClick={() => this.onSelect(id)}
+      >
         <Typography className={classes.title} variant="h6" component="h3">
           {wordToMatch ? this.getHighlightedText(title, wordToMatch) : title}
         </Typography>
@@ -144,7 +158,7 @@ class Note extends React.Component {
           aria-label="Directions"
           onClick={e => {
             e.stopPropagation();
-            handleDeleteNote(id);
+            onDelete(id);
           }}
         >
           <Delete />
