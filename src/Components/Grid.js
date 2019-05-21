@@ -23,8 +23,8 @@ export class Table extends Component {
       classes,
       notes,
       onSelect,
-      onUpdate,
-      editedNoteID,
+      handleCheck,
+      editedNote,
       onDelete,
       wordToMatch
     } = this.props;
@@ -49,7 +49,7 @@ export class Table extends Component {
         : null;
     };
 
-    const renderNotes = searchResults() ? searchResults() : notes;
+    const renderNotes = wordToMatch ? searchResults() : notes;
     return (
       <Grid className={classes.root} container justify="flex-start">
         {renderNotes.map(note => (
@@ -58,13 +58,14 @@ export class Table extends Component {
             xs={12}
             sm={"auto"}
             key={note.id}
-            className={note.id === editedNoteID ? classes.ghost : null}
+            onClick={() => onSelect(note.id)}
+            className={note.id === editedNote.id ? classes.ghost : null}
           >
             <Note
               key={note.id}
               note={note}
               wordToMatch={wordToMatch}
-              onUpdate={onUpdate}
+              handleCheck={handleCheck}
               onDelete={onDelete}
               onSelect={onSelect}
             />

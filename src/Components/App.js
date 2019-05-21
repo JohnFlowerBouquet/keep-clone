@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withStyles, CssBaseline } from "@material-ui/core";
 import Header from "./Header";
-import NoteInput from "./AddNote";
+import AddNote from "./AddNote";
 import Grid from "./Grid";
 import ModalComponent from "./Modal";
 import { Notes } from "../store";
@@ -15,7 +15,6 @@ const styles = {
 class App extends Component {
   state = {
     Notes,
-    searchResults: null,
     wordToMatch: "",
     actvieNote: {},
     editMode: false,
@@ -23,7 +22,7 @@ class App extends Component {
     type: ""
   };
 
-  handleClick = type => {
+  selectNoteType = type => {
     this.setState(() => ({
       type: type,
       isOpen: true
@@ -73,6 +72,21 @@ class App extends Component {
       wordToMatch: wordToMatch
     }));
 
+  handleCheck = (noteID, taskID) => {
+    this.setState(({ Notes }) => ({
+      Notes: Notes.map(note =>
+        note.id === noteID
+          ? {
+              ...note,
+              tasks: note.tasks.map(task =>
+                task.id === taskID ? { ...task, isDone: !task.isDone } : task
+              )
+            }
+          : note
+      )
+    }));
+  };
+
   render() {
     const { Notes, wordToMatch, editMode, actvieNote } = this.state;
     return (
@@ -82,17 +96,17 @@ class App extends Component {
           handleSearch={this.handleSearch}
           wordToMatch={this.state.wordToMatch}
         />
-        <NoteInput
+        <AddNote
           onAdd={this.handleAddNote}
           isOpen={this.state.isOpen}
           type={this.state.type}
-          handleClick={this.handleClick}
+          selectNoteType={this.selectNoteType}
         />
         <Grid
           notes={Notes}
           onSelect={this.handleNoteSelectEdit}
-          onUpdate={this.handleUpdateNotes}
-          editedNoteID={actvieNote.id}
+          handleCheck={this.handleCheck}
+          editedNote={actvieNote}
           onDelete={this.handleDeleteNote}
           wordToMatch={wordToMatch.toUpperCase()}
         />
@@ -100,7 +114,7 @@ class App extends Component {
           editMode={editMode}
           onDeselect={this.handleNoteCloseEdit}
           onUpdate={this.handleUpdateNotes}
-          actvieNote={actvieNote}
+          editedNote={actvieNote}
         />
       </React.Fragment>
     );

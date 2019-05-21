@@ -54,30 +54,6 @@ const styles = theme => ({
 });
 
 class Note extends React.Component {
-  state = this.getInitState();
-
-  getInitState() {
-    const { note } = this.props;
-    return (
-      note || {
-        title: "",
-        id: "",
-        tasks: []
-      }
-    );
-  }
-
-  handleCheck = id => {
-    this.setState(
-      ({ tasks }) => ({
-        tasks: tasks.map(task =>
-          task.id === id ? { ...task, isDone: !task.isDone } : task
-        )
-      }),
-      () => this.props.onUpdate(this.state)
-    );
-  };
-
   getHighlightedText = (text, higlight) => {
     let parts = text.split(new RegExp(`(${higlight})`, "gi"));
     return (
@@ -99,66 +75,60 @@ class Note extends React.Component {
     );
   };
 
-  onSelect = id => {
-    this.setState(
-      () => ({
-        active: true
-      }),
-      this.props.onSelect(id)
-    );
-  };
-
   render() {
-    const { classes, onDelete, wordToMatch } = this.props,
-      { title, tasks, text, id, active } = this.state;
+    const {
+      classes,
+      onDelete,
+      wordToMatch,
+      handleCheck,
+      note: { title, tasks, text, id: noteID }
+    } = this.props;
     return (
-      <Paper
-        className={classes.root}
-        styles={active ? { visibility: "hidden" } : null}
-        elevation={1}
-        onClick={() => this.onSelect(id)}
-      >
+      <Paper className={classes.root} elevation={1}>
         <Typography className={classes.title} variant="h6" component="h3">
           {wordToMatch ? this.getHighlightedText(title, wordToMatch) : title}
         </Typography>
-        <List className={classes.list}>
-          {tasks.map(({ text, isDone, id }, index) => (
-            <ListItem
-              key={id}
-              className={isDone ? classes.list__itemDone : classes.list__item}
-              divider
-            >
-              <Checkbox
-                checked={isDone}
-                onClick={e => {
-                  e.stopPropagation();
-                  this.handleCheck(id);
-                }}
-                checkedIcon={<CheckBoxOutlined />}
-              />
-              <ListItemText
-                className={classes.itemText}
-                primary={
-                  wordToMatch
-                    ? this.getHighlightedText(text, wordToMatch)
-                    : text
-                }
-              />
-            </ListItem>
-          ))}
-          {text && (
-            <Typography variant="body2" component="p">
-              {wordToMatch ? this.getHighlightedText(text, wordToMatch) : text}
-            </Typography>
-          )}
-        </List>
+        {tasks.length !== 0 && (
+          <List className={classes.list}>
+            {tasks.map(({ text, isDone, id }, index) => (
+              <ListItem
+                key={id}
+                className={isDone ? classes.list__itemDone : classes.list__item}
+                divider
+              >
+                <Checkbox
+                  checked={isDone}
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleCheck(noteID, id);
+                  }}
+                  checkedIcon={<CheckBoxOutlined />}
+                />
+                <ListItemText
+                  className={classes.itemText}
+                  primary={
+                    wordToMatch
+                      ? this.getHighlightedText(text, wordToMatch)
+                      : text
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
+        )}
+
+        {text && (
+          <Typography variant="body2" component="p">
+            {wordToMatch ? this.getHighlightedText(text, wordToMatch) : text}
+          </Typography>
+        )}
         <IconButton
           color="primary"
           className={classes.iconButton}
           aria-label="Directions"
           onClick={e => {
             e.stopPropagation();
-            onDelete(id);
+            onDelete(noteID);
           }}
         >
           <Delete />
@@ -169,7 +139,18 @@ class Note extends React.Component {
 }
 
 Note.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  wordToMatch: PropTypes.string,
+  handleCheck: PropTypes.func.isRequired,
+  note: PropTypes.shape({
+    title: PropTypes.string,
+    id: PropTypes.string,
+    color: PropTypes.string,
+    dateCreated: PropTypes.string,
+    deadline: PropTypes.string,
+    tasks: PropTypes.array
+  })
 };
 
 export default withStyles(styles)(Note);

@@ -125,14 +125,14 @@ export default withStyles(styles)(
 
     render() {
       const { title, text, tasks } = this.state;
-      const { classes, handleClick, type, isOpen } = this.props;
+      const { classes, selectNoteType, type, isOpen } = this.props;
       let Input;
       if (!isOpen) {
         Input = (
           <div className={classes.textContainer}>
             <Typography
               className={classes.text}
-              onClick={() => handleClick("note")}
+              onClick={() => selectNoteType("note")}
             >
               Create Note...
             </Typography>
@@ -184,7 +184,7 @@ export default withStyles(styles)(
               <div className={classes.buttonsContainer}>
                 <IconButton
                   color="primary"
-                  onClick={() => handleClick("list")}
+                  onClick={() => selectNoteType("list")}
                   className={classes.iconButton}
                   aria-label="Add List Note"
                   name="list"
