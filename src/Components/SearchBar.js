@@ -38,7 +38,7 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
     paddingLeft: theme.spacing.unit * 10,
-    transition: "all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+    transition: "width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
     borderRadius: 16,
     width: "0",
     cursor: "pointer",

@@ -16,7 +16,7 @@ class App extends Component {
   state = {
     Notes,
     wordToMatch: "",
-    actvieNote: {},
+    activeNote: {},
     editMode: false,
     isOpen: false,
     type: ""
@@ -30,14 +30,21 @@ class App extends Component {
   };
 
   handleNoteSelectEdit = id =>
-    this.setState(({ Notes }) => ({
-      actvieNote: Notes.find(note => note.id === id),
+    this.setState(
+      ({ Notes }) => ({
+        activeNote: Notes.find(note => note.id === id)
+      }),
+      this.openModal()
+    );
+
+  openModal = () =>
+    this.setState(() => ({
       editMode: true
     }));
 
   handleNoteCloseEdit = () =>
     this.setState(() => ({
-      actvieNote: {},
+      activeNote: {},
       editMode: false
     }));
 
@@ -88,7 +95,7 @@ class App extends Component {
   };
 
   render() {
-    const { Notes, wordToMatch, editMode, actvieNote } = this.state;
+    const { Notes, wordToMatch, editMode, activeNote } = this.state;
     return (
       <React.Fragment>
         <CssBaseline />
@@ -106,7 +113,7 @@ class App extends Component {
           notes={Notes}
           onSelect={this.handleNoteSelectEdit}
           handleCheck={this.handleCheck}
-          editedNote={actvieNote}
+          editedNote={activeNote.id}
           onDelete={this.handleDeleteNote}
           wordToMatch={wordToMatch.toUpperCase()}
         />
@@ -114,7 +121,7 @@ class App extends Component {
           editMode={editMode}
           onDeselect={this.handleNoteCloseEdit}
           onUpdate={this.handleUpdateNotes}
-          editedNote={actvieNote}
+          editedNote={activeNote}
         />
       </React.Fragment>
     );

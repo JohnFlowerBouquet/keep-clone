@@ -16,7 +16,21 @@ const styles = theme => ({
     margin: theme.spacing.unit * 0.5
   },
   list: {
-    width: "100%"
+    width: "100%",
+    display: "flex",
+    flexDirection: "column"
+  },
+  list__item: {
+    padding: "0"
+  },
+  list__itemDone: {
+    order: "1",
+    padding: "0",
+    textDecoration: "line-through",
+    color: "#5f6368"
+  },
+  list__itemNew: {
+    order: "2"
   }
 });
 
@@ -44,7 +58,16 @@ class Checklist extends Component {
         {tasks.map(({ text, isDone, id }, index, tasks) => {
           const last = index === tasks.length - 1;
           return (
-            <ListItem key={id}>
+            <ListItem
+              key={id}
+              className={
+                last
+                  ? classes.list__itemNew
+                  : isDone
+                  ? classes.list__itemDone
+                  : classes.list__item
+              }
+            >
               {last ? (
                 <Add />
               ) : (

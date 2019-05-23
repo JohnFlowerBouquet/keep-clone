@@ -134,6 +134,7 @@ class EditNote extends Component {
             onChange={this.handleChange}
             multiline
             fullWidth
+            tabIndex="-1"
           />
           {Input}
           <IconButton

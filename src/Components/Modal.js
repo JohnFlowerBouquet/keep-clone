@@ -18,8 +18,13 @@ const ModalComponent = ({
   onUpdate
 }) => {
   return (
-    <Modal open={editMode} onClose={onDeselect} className={classes.modal}>
-      <EditNote tabIndex="-1" note={editedNote} onUpdate={onUpdate} />
+    <Modal
+      open={editMode}
+      onClose={onDeselect}
+      className={classes.modal}
+      disableAutoFocus
+    >
+      <EditNote note={editedNote} onUpdate={onUpdate} focus={true} />
     </Modal>
   );
 };

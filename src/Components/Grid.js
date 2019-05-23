@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { withStyles, Grid } from "@material-ui/core";
 import Note from "../templates/Note";
@@ -13,11 +13,11 @@ const styles = theme => ({
     }
   },
   ghost: {
-    visibility: "hidden"
+    opacity: 0
   }
 });
 
-export class Table extends Component {
+export class GridComponent extends PureComponent {
   render() {
     const {
       classes,
@@ -58,11 +58,9 @@ export class Table extends Component {
             xs={12}
             sm={"auto"}
             key={note.id}
-            onClick={() => onSelect(note.id)}
-            className={note.id === editedNote.id ? classes.ghost : null}
+            className={note.id === editedNote ? classes.ghost : null}
           >
             <Note
-              key={note.id}
               note={note}
               wordToMatch={wordToMatch}
               handleCheck={handleCheck}
@@ -76,8 +74,18 @@ export class Table extends Component {
   }
 }
 
-Table.propTypes = {
-  classes: PropTypes.object.isRequired
+GridComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
+  notes: PropTypes.array.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  handleCheck: PropTypes.func.isRequired,
+  editedNote: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  wordToMatch: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(Table);
+GridComponent.defaultProps = {
+  editedNote: ""
+};
+
+export default withStyles(styles)(GridComponent);
