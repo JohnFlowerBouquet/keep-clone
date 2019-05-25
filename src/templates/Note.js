@@ -93,10 +93,10 @@ const Favorite = withStyles(theme => ({
     right: "0",
     top: "0"
   }
-}))(({ classes, noteID, hover }) => {
+}))(({ classes, noteID, isFavorite, hover, handleFavorite }) => {
   const toggleFavorite = e => {
     e.stopPropagation();
-    console.log("asd");
+    handleFavorite(noteID);
   };
   return (
     <IconButton
@@ -105,7 +105,7 @@ const Favorite = withStyles(theme => ({
       onClick={toggleFavorite}
       className={hover ? classes.favorite : classes.invisible}
     >
-      <StarBorder />
+      {isFavorite ? <Star /> : <StarBorder />}
     </IconButton>
   );
 });
@@ -147,8 +147,9 @@ class Note extends PureComponent {
       onDelete,
       wordToMatch,
       handleCheck,
+      handleFavorite,
       hidden,
-      note: { title, tasks, text, id: noteID }
+      note: { title, tasks, text, isFavorite, id: noteID }
     } = this.props;
     const { hover } = this.state;
     return (
@@ -160,7 +161,12 @@ class Note extends PureComponent {
         onMouseEnter={this.toggleHover}
         onMouseLeave={this.toggleHover}
       >
-        <Favorite noteID={noteID} hover={hover} />
+        <Favorite
+          noteID={noteID}
+          hover={hover}
+          isFavorite={isFavorite}
+          handleFavorite={handleFavorite}
+        />
         <Typography className={classes.title} variant="h6" component="h3">
           {wordToMatch ? this.getHighlightedText(title, wordToMatch) : title}
         </Typography>

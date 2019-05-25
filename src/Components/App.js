@@ -93,6 +93,14 @@ class App extends Component {
       )
     }));
   };
+  handleFavorite = noteID =>
+    this.setState(({ Notes }) => ({
+      Notes: [
+        ...Notes.map(note =>
+          note.id === noteID ? { ...note, isFavorite: !note.isFavorite } : note
+        )
+      ]
+    }));
 
   render() {
     const { Notes, wordToMatch, editMode, activeNote } = this.state;
@@ -113,6 +121,7 @@ class App extends Component {
           notes={Notes}
           onSelect={this.handleNoteSelectEdit}
           handleCheck={this.handleCheck}
+          handleFavorite={this.handleFavorite}
           editedNote={activeNote.id}
           onDelete={this.handleDeleteNote}
           wordToMatch={wordToMatch.toUpperCase()}

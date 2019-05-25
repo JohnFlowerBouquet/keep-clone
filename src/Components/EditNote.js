@@ -3,11 +3,10 @@ import {
   withStyles,
   Paper,
   InputBase,
-  ClickAwayListener,
-  IconButton
+  ClickAwayListener
 } from "@material-ui/core/";
-import { ColorLens } from "@material-ui/icons";
 import Checklist from "./Checklist";
+import NoteSettings from "../templates/NoteSettings";
 
 const styles = theme => ({
   root: {
@@ -97,7 +96,7 @@ class EditNote extends Component {
 
   render() {
     const { title, text, tasks } = this.state;
-    const { classes, handleClick } = this.props;
+    const { classes } = this.props;
     let Input;
     if (text) {
       Input = (
@@ -137,15 +136,7 @@ class EditNote extends Component {
             tabIndex="-1"
           />
           {Input}
-          <IconButton
-            color="primary"
-            onClick={() => handleClick("list")}
-            className={classes.iconButton}
-            aria-label="Add List Note"
-            name="list"
-          >
-            <ColorLens />
-          </IconButton>
+          <NoteSettings hover={true} />
         </Paper>
       </ClickAwayListener>
     );

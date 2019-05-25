@@ -1,15 +1,21 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { withStyles, Grid } from "@material-ui/core";
+import { withStyles, Grid, Divider, Typography } from "@material-ui/core";
 import Note from "../templates/Note";
 
 const styles = theme => ({
   root: {
-    margin: "3rem auto",
+    margin: "0 auto 3rem",
     padding: "5px",
     [theme.breakpoints.up("sm")]: {
       margin: "0 auto",
       padding: "0 10vw"
+    }
+  },
+  subheading: {
+    margin: "0 13px",
+    [theme.breakpoints.up("sm")]: {
+      margin: "0 10vw"
     }
   },
   ghost: {
@@ -26,7 +32,8 @@ export class GridComponent extends PureComponent {
       handleCheck,
       editedNote,
       onDelete,
-      wordToMatch
+      wordToMatch,
+      handleFavorite
     } = this.props;
 
     const searchResults = () => {
@@ -50,26 +57,64 @@ export class GridComponent extends PureComponent {
     };
 
     const renderNotes = wordToMatch ? searchResults() : notes;
+    const someFavorites = renderNotes.some(note => note.isFavorite);
+
     return (
-      <Grid className={classes.root} container justify="flex-start">
-        {renderNotes.map(note => (
-          <Grid
-            item
-            xs={12}
-            sm={"auto"}
-            key={note.id}
-            className={note.id === editedNote ? classes.ghost : null}
-          >
-            <Note
-              note={note}
-              wordToMatch={wordToMatch}
-              handleCheck={handleCheck}
-              onDelete={onDelete}
-              onSelect={onSelect}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      <>
+        {someFavorites && (
+          <Typography className={classes.subheading}>Favorites</Typography>
+        )}
+        <Grid className={classes.root} container justify="flex-start">
+          {renderNotes
+            .filter(note => note.isFavorite)
+            .map(note => (
+              <Grid
+                item
+                xs={12}
+                sm={"auto"}
+                key={note.id}
+                className={note.id === editedNote ? classes.ghost : null}
+              >
+                <Note
+                  note={note}
+                  wordToMatch={wordToMatch}
+                  handleCheck={handleCheck}
+                  handleFavorite={handleFavorite}
+                  onDelete={onDelete}
+                  onSelect={onSelect}
+                />
+              </Grid>
+            ))}
+        </Grid>
+        {someFavorites && (
+          <Divider variant="middle" className={classes.divider} />
+        )}
+        {someFavorites && (
+          <Typography className={classes.subheading}>Others</Typography>
+        )}
+        <Grid className={classes.root} container justify="flex-start">
+          {renderNotes
+            .filter(note => !note.isFavorite)
+            .map(note => (
+              <Grid
+                item
+                xs={12}
+                sm={"auto"}
+                key={note.id}
+                className={note.id === editedNote ? classes.ghost : null}
+              >
+                <Note
+                  note={note}
+                  wordToMatch={wordToMatch}
+                  handleCheck={handleCheck}
+                  handleFavorite={handleFavorite}
+                  onDelete={onDelete}
+                  onSelect={onSelect}
+                />
+              </Grid>
+            ))}
+        </Grid>
+      </>
     );
   }
 }
