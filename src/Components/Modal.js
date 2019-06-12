@@ -15,7 +15,8 @@ const ModalComponent = ({
   onDeselect,
   editMode,
   editedNote,
-  onUpdate
+  onUpdate,
+  onDelete
 }) => {
   return (
     <Modal
@@ -24,7 +25,12 @@ const ModalComponent = ({
       className={classes.modal}
       disableAutoFocus
     >
-      <EditNote note={editedNote} onUpdate={onUpdate} focus={true} />
+      <EditNote
+        note={editedNote}
+        onUpdate={onUpdate}
+        focus={true}
+        onDelete={onDelete}
+      />
     </Modal>
   );
 };

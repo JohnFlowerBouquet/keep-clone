@@ -29,20 +29,13 @@ class App extends Component {
     }));
   };
 
-  handleNoteSelectEdit = id =>
-    this.setState(
-      ({ Notes }) => ({
-        activeNote: Notes.find(note => note.id === id)
-      }),
-      this.openModal()
-    );
-
-  openModal = () =>
-    this.setState(() => ({
+  handleNoteSelect = id =>
+    this.setState(({ Notes }) => ({
+      activeNote: Notes.find(note => note.id === id),
       editMode: true
     }));
 
-  handleNoteCloseEdit = () =>
+  handleModalClose = () =>
     this.setState(() => ({
       activeNote: {},
       editMode: false
@@ -58,7 +51,7 @@ class App extends Component {
   handleAddNote = addedNote => {
     if (addedNote.title || addedNote.text || addedNote.tasks.length > 1) {
       this.setState(({ Notes }) => ({
-        Notes: [...Notes, { ...addedNote, id: new Date().getTime() }],
+        Notes: [{ ...addedNote }, ...Notes],
         isOpen: false,
         type: ""
       }));
@@ -71,7 +64,8 @@ class App extends Component {
   };
   handleDeleteNote = id =>
     this.setState(({ Notes }) => ({
-      Notes: [...Notes.filter(note => note.id !== id)]
+      Notes: [...Notes.filter(note => note.id !== id)],
+      editMode: false
     }));
 
   handleSearch = wordToMatch =>
@@ -102,34 +96,43 @@ class App extends Component {
       ]
     }));
 
+  handleColorSelect = (color, noteID) =>
+    this.setState(({ Notes }) => ({
+      Notes: [
+        ...Notes.map(note =>
+          note.id === noteID ? { ...note, color: color } : note
+        )
+      ]
+    }));
+
   render() {
     const { Notes, wordToMatch, editMode, activeNote } = this.state;
     return (
       <React.Fragment>
         <CssBaseline />
-        <Header
-          handleSearch={this.handleSearch}
-          wordToMatch={this.state.wordToMatch}
-        />
+        <Header handleSearch={this.handleSearch} wordToMatch={wordToMatch} />
         <AddNote
           onAdd={this.handleAddNote}
           isOpen={this.state.isOpen}
           type={this.state.type}
           selectNoteType={this.selectNoteType}
+          handleFavorite={this.handleFavorite}
         />
         <Grid
           notes={Notes}
-          onSelect={this.handleNoteSelectEdit}
+          onSelect={this.handleNoteSelect}
           handleCheck={this.handleCheck}
           handleFavorite={this.handleFavorite}
           editedNote={activeNote.id}
           onDelete={this.handleDeleteNote}
           wordToMatch={wordToMatch.toUpperCase()}
+          handleColorSelect={this.handleColorSelect}
         />
         <ModalComponent
           editMode={editMode}
-          onDeselect={this.handleNoteCloseEdit}
+          onDeselect={this.handleModalClose}
           onUpdate={this.handleUpdateNotes}
+          onDelete={this.handleDeleteNote}
           editedNote={activeNote}
         />
       </React.Fragment>

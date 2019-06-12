@@ -1,77 +1,63 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles, IconButton } from "@material-ui/core";
-import { Delete, ColorLens, AlarmAdd } from "@material-ui/icons";
+import { Delete, AlarmAdd } from "@material-ui/icons";
+import ColorsPalette from "./ColorsPalette";
 
 const styles = theme => ({
   visible: {
     opacity: "1",
     transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
-    textAlign: "end"
+    marginLeft: "auto"
   },
   invisible: {
     opacity: "0",
-    textAlign: "end"
+    transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+    marginLeft: "auto"
   }
 });
 
-const DeleteButton = ({ noteID, handleDelete }) => {
-  const onDelete = e => {
+const DeleteButton = ({ noteID = null, onDelete }) => {
+  const handleDelete = e => {
     e.stopPropagation();
-    handleDelete(noteID);
+    onDelete(noteID);
+  };
+  const handleClear = e => {
+    e.stopPropagation();
+    onDelete();
   };
   return (
     <IconButton
       color="primary"
       aria-label="Delete note"
       size="small"
-      onClick={onDelete}
+      onClick={noteID ? handleDelete : handleClear}
     >
       <Delete />
     </IconButton>
   );
 };
 
-const ColorsButton = ({ noteID, handleDelete }) => {
-  const onDelete = e => {
-    e.stopPropagation();
-    handleDelete(noteID);
-  };
+const AlarmButton = ({ noteID }) => {
   return (
-    <IconButton
-      color="primary"
-      aria-label="Delete note"
-      size="small"
-      onClick={onDelete}
-    >
-      <ColorLens />
-    </IconButton>
-  );
-};
-
-const AlarmButton = ({ noteID, handleDelete }) => {
-  const onDelete = e => {
-    e.stopPropagation();
-    handleDelete(noteID);
-  };
-  return (
-    <IconButton
-      color="primary"
-      aria-label="Delete note"
-      size="small"
-      onClick={onDelete}
-    >
+    <IconButton color="primary" aria-label="Delete note" size="small">
       <AlarmAdd />
     </IconButton>
   );
 };
 
-const NoteSettings = ({ classes, hover, noteID, handleDelete }) => {
+const NoteSettings = ({
+  classes,
+  visible,
+  noteID,
+  onDelete,
+  onColorSelect
+}) => {
   return (
-    <div className={hover ? classes.visible : classes.invisible}>
-      <DeleteButton handleDelete={handleDelete} noteID={noteID} />
-      <ColorsButton handleDelete={handleDelete} noteID={noteID} />
-      <AlarmButton handleDelete={handleDelete} noteID={noteID} />
+    <div className={visible ? classes.visible : classes.invisible}>
+      <DeleteButton onDelete={onDelete} noteID={noteID} />
+      <ColorsPalette onColorSelect={onColorSelect} noteID={noteID} />
+      <AlarmButton noteID={noteID} />
     </div>
   );
 };

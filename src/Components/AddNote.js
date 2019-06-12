@@ -15,10 +15,13 @@ import {
 } from "@material-ui/icons";
 
 import Checklist from "./Checklist";
+import NoteSettings from "../templates/NoteSettings";
+import Favorite from "../templates/Favorite";
 
 const styles = theme => ({
   root: {
     display: "flex",
+    position: "relative",
     flexWrap: "wrap",
     alignItems: "center",
     width: 300,
@@ -53,8 +56,14 @@ const StyledInput = withStyles(theme => ({
     marginBottom: 10,
     fontWeight: "bold",
     padding: "12px 16px",
+    '&[label="Title"]': {
+      width: "calc(100% - 48px)"
+    },
     [theme.breakpoints.up("sm")]: {
-      width: "100%"
+      width: "100%",
+      '&[label="Title"]': {
+        width: "calc(100% - 48px)"
+      }
     }
   },
   inputMultiline: {
@@ -62,111 +71,155 @@ const StyledInput = withStyles(theme => ({
   }
 }))(InputBase);
 
-export default withStyles(styles)(
-  class extends Component {
-    state = this.getInitialState();
+class NewNote extends Component {
+  state = this.getInitialState();
 
-    getInitialState() {
-      const { note } = this.props;
-      return note
-        ? note
-        : {
-            text: "",
-            title: "",
-            tasks: [
-              {
-                text: "",
-                isDone: false,
-                id: new Date().getTime()
-              }
-            ]
-          };
+  getInitialState() {
+    const { note } = this.props;
+    return note
+      ? note
+      : {
+          title: "",
+          id: `note${new Date().getTime().toString()}`,
+          isFavorite: false,
+          text: "",
+          color: "#ffffff",
+          tasks: [
+            {
+              text: "",
+              isDone: false,
+              id: `task${new Date().getTime().toString()}`
+            }
+          ]
+        };
+  }
+
+  handleCheck = id => {
+    this.setState(({ tasks }) => ({
+      tasks: tasks.map(task =>
+        task.id === id ? { ...task, isDone: !task.isDone } : task
+      )
+    }));
+  };
+
+  handleClickAway = e => {
+    const { isOpen } = this.props;
+    if (isOpen) {
+      const newNote = this.state;
+      newNote.tasks.pop();
+      this.props.onAdd(newNote);
+      e.preventDefault();
+    }
+    this.setState(() => this.getInitialState());
+  };
+
+  handleChange = ({ target: { value, name } }) => {
+    this.setState(() => ({
+      [name]: value
+    }));
+  };
+
+  handleTaskChange = ({ target: { value, id } }) => {
+    this.setState(({ tasks }) => ({
+      tasks: tasks.map(task =>
+        task.id.toString() === id ? { ...task, text: value } : task
+      )
+    }));
+  };
+
+  handleTaskAdd = e => {
+    this.handleTaskChange(e);
+    this.setState(({ tasks }) => ({
+      tasks: [...tasks, { text: "", isDone: false, id: new Date().getTime() }]
+    }));
+  };
+  handleFavorite = () => {
+    this.setState(({ isFavorite }) => ({
+      isFavorite: !isFavorite
+    }));
+  };
+
+  handleDelete = () => {
+    this.setState(() => ({
+      title: "",
+      id: `note${new Date().getTime().toString()}`,
+      isFavorite: false,
+      text: "",
+      tasks: [
+        {
+          text: "",
+          isDone: false,
+          id: `task${new Date().getTime().toString()}`
+        }
+      ]
+    }));
+  };
+
+  handleColorSelect = color => {
+    this.setState(() => ({
+      color: color
+    }));
+  };
+
+  render() {
+    const { title, id: noteID, isFavorite, text, tasks, color } = this.state;
+    const { classes, selectNoteType, type, isOpen } = this.props;
+    const style = {
+      backgroundColor: color
+    };
+    let Input;
+    if (!isOpen) {
+      Input = (
+        <div className={classes.textContainer}>
+          <Typography
+            className={classes.text}
+            onClick={() => selectNoteType("note")}
+          >
+            Create Note...
+          </Typography>
+        </div>
+      );
+    } else {
+      if (type === "note") {
+        Input = (
+          <StyledInput
+            label="Note"
+            autoComplete="off"
+            value={text}
+            name="text"
+            onChange={this.handleChange}
+            placeholder="Create Note..."
+            multiline
+          />
+        );
+      } else if (type === "list") {
+        Input = (
+          <Checklist
+            tasks={tasks}
+            handleCheck={this.handleCheck}
+            handleTaskAdd={this.handleTaskAdd}
+            handleTaskChange={this.handleTaskChange}
+          />
+        );
+      }
     }
 
-    handleCheck = id => {
-      this.setState(({ tasks }) => ({
-        tasks: tasks.map(task =>
-          task.id === id ? { ...task, isDone: !task.isDone } : task
-        )
-      }));
-    };
-
-    handleClickAway = e => {
-      const { isOpen } = this.props;
-      if (isOpen) {
-        const newNote = this.state;
-        newNote.tasks.pop();
-        this.props.onAdd(newNote);
-        e.preventDefault();
-      }
-      this.setState(() => this.getInitialState());
-    };
-
-    handleChange = ({ target: { value, name } }) => {
-      this.setState(() => ({
-        [name]: value
-      }));
-    };
-
-    handleTaskChange = ({ target: { value, id } }) => {
-      this.setState(({ tasks }) => ({
-        tasks: tasks.map(task =>
-          task.id.toString() === id ? { ...task, text: value } : task
-        )
-      }));
-    };
-
-    handleTaskAdd = e => {
-      this.handleTaskChange(e);
-      this.setState(({ tasks }) => ({
-        tasks: [...tasks, { text: "", isDone: false, id: new Date().getTime() }]
-      }));
-    };
-
-    render() {
-      const { title, text, tasks } = this.state;
-      const { classes, selectNoteType, type, isOpen } = this.props;
-      let Input;
-      if (!isOpen) {
-        Input = (
-          <div className={classes.textContainer}>
-            <Typography
-              className={classes.text}
-              onClick={() => selectNoteType("note")}
-            >
-              Create Note...
-            </Typography>
-          </div>
-        );
-      } else {
-        if (type === "note") {
-          Input = (
-            <StyledInput
-              label="Note"
-              autoComplete="off"
-              value={text}
-              name="text"
-              onChange={this.handleChange}
-              placeholder="Create Note..."
-              multiline
-            />
-          );
-        } else if (type === "list") {
-          Input = (
-            <Checklist
-              tasks={tasks}
-              handleCheck={this.handleCheck}
-              handleTaskAdd={this.handleTaskAdd}
-              handleTaskChange={this.handleTaskChange}
-            />
-          );
-        }
-      }
-
-      return (
-        <ClickAwayListener onClickAway={this.handleClickAway}>
-          <Paper className={classes.root} elevation={1} display="flex">
-            {isOpen && (
+    return (
+      <ClickAwayListener onClickAway={this.handleClickAway}>
+        <Paper
+          className={classes.root}
+          elevation={1}
+          display="flex"
+          style={style}
+        >
+          {isOpen && (
+            <>
+              <Favorite
+                noteID={noteID}
+                visible={true}
+                isFavorite={isFavorite}
+                handleFavorite={this.handleFavorite}
+              />
               <StyledInput
                 label="Title"
                 autoComplete="off"
@@ -177,41 +230,50 @@ export default withStyles(styles)(
                 multiline
                 fullWidth
               />
-            )}
-            {Input}
+            </>
+          )}
+          {Input}
 
-            {!isOpen && (
-              <div className={classes.buttonsContainer}>
-                <IconButton
-                  color="primary"
-                  onClick={() => selectNoteType("list")}
-                  className={classes.iconButton}
-                  aria-label="Add List Note"
-                  name="list"
-                >
-                  <CheckBoxOutlined />
-                </IconButton>
-                <IconButton
-                  color="primary"
-                  disabled
-                  className={classes.iconButton}
-                  aria-label="Directions"
-                >
-                  <Brush />
-                </IconButton>
-                <IconButton
-                  color="primary"
-                  disabled
-                  className={classes.iconButton}
-                  aria-label="Directions"
-                >
-                  <InsertPhotoOutlined />
-                </IconButton>
-              </div>
-            )}
-          </Paper>
-        </ClickAwayListener>
-      );
-    }
+          {!isOpen && (
+            <div className={classes.buttonsContainer}>
+              <IconButton
+                color="primary"
+                onClick={() => selectNoteType("list")}
+                className={classes.iconButton}
+                aria-label="Add List Note"
+                name="list"
+              >
+                <CheckBoxOutlined />
+              </IconButton>
+              <IconButton
+                color="primary"
+                disabled
+                className={classes.iconButton}
+                aria-label="Directions"
+              >
+                <Brush />
+              </IconButton>
+              <IconButton
+                color="primary"
+                disabled
+                className={classes.iconButton}
+                aria-label="Directions"
+              >
+                <InsertPhotoOutlined />
+              </IconButton>
+            </div>
+          )}
+          {isOpen && (
+            <NoteSettings
+              onDelete={this.handleDelete}
+              onColorSelect={this.handleColorSelect}
+              visible={true}
+            />
+          )}
+        </Paper>
+      </ClickAwayListener>
+    );
   }
-);
+}
+
+export default withStyles(styles)(NewNote);

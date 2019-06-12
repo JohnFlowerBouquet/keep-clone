@@ -67,12 +67,6 @@ class EditNote extends Component {
     }));
   };
 
-  handleClickAway = () => {
-    const editedNote = this.state;
-    editedNote.tasks.pop();
-    this.props.onUpdate(editedNote);
-  };
-
   handleChange = ({ target: { value, name } }) => {
     this.setState(() => ({
       [name]: value
@@ -86,6 +80,9 @@ class EditNote extends Component {
       )
     }));
   };
+  handleClickAway = () => {
+    return true;
+  };
 
   handleTaskAdd = e => {
     this.handleTaskChange(e);
@@ -94,9 +91,24 @@ class EditNote extends Component {
     }));
   };
 
+  handleColorSelect = color => {
+    this.setState(() => ({
+      color: color
+    }));
+  };
+
+  componentWillUnmount() {
+    const editedNote = Object.assign({}, this.state);
+    editedNote.tasks.pop();
+    this.props.onUpdate(editedNote);
+  }
+
   render() {
-    const { title, text, tasks } = this.state;
-    const { classes } = this.props;
+    const { title, text, tasks, id: noteID, color } = this.state;
+    const { classes, onDelete } = this.props;
+    const style = {
+      backgroundColor: color
+    };
     let Input;
     if (text) {
       Input = (
@@ -123,7 +135,12 @@ class EditNote extends Component {
 
     return (
       <ClickAwayListener onClickAway={this.handleClickAway}>
-        <Paper className={classes.root} elevation={1} display="flex">
+        <Paper
+          className={classes.root}
+          style={style}
+          elevation={1}
+          display="flex"
+        >
           <StyledInput
             label="Title"
             autoComplete="off"
@@ -136,7 +153,12 @@ class EditNote extends Component {
             tabIndex="-1"
           />
           {Input}
-          <NoteSettings hover={true} />
+          <NoteSettings
+            visible={true}
+            onDelete={onDelete}
+            noteID={noteID}
+            onColorSelect={this.handleColorSelect}
+          />
         </Paper>
       </ClickAwayListener>
     );

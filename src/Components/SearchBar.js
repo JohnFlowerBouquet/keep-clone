@@ -58,6 +58,10 @@ const styles = theme => ({
 });
 
 const SearchBar = ({ classes, handleSearch, wordToMatch }) => {
+  function search(e) {
+    e.preventDefault();
+    handleSearch(e.target.value);
+  }
   return (
     <div className={classes.search}>
       <InputBase
@@ -67,7 +71,7 @@ const SearchBar = ({ classes, handleSearch, wordToMatch }) => {
           root: classes.inputRoot,
           input: classes.inputInput
         }}
-        onChange={e => handleSearch(e.target.value)}
+        onChange={search}
       />
       <div className={classes.searchIcon}>
         <SearchIcon />
@@ -77,7 +81,9 @@ const SearchBar = ({ classes, handleSearch, wordToMatch }) => {
 };
 
 SearchBar.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  wordToMatch: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(SearchBar);

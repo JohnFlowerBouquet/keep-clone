@@ -20,11 +20,10 @@ const styles = theme => ({
       width: "auto"
     }
   },
-  icon: {
-    margin: 0,
-    [theme.breakpoints.up("sm")]: {
-      margin: 8
-    }
+  logo: {
+    color: "#f4b607",
+    fontSize: 32,
+    margin: 8
   },
   title: {
     fontSize: "1rem",
@@ -40,7 +39,7 @@ export class Header extends Component {
     return (
       <AppBar className={classes.root}>
         <div className={classes.container}>
-          <Description style={{ color: "#f4b607", fontSize: 32, margin: 8 }} />
+          <Description className={classes.logo} />
           <Typography className={classes.title} variant="h5" color="inherit">
             Keep-clone
           </Typography>

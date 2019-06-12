@@ -8,10 +8,11 @@ import {
   ListItem,
   ListItemText,
   Checkbox,
-  IconButton
+  Hidden
 } from "@material-ui/core";
-import { Star, StarBorder, CheckBoxOutlined } from "@material-ui/icons";
+import { CheckBoxOutlined } from "@material-ui/icons";
 import NoteSettings from "./NoteSettings";
+import Favorite from "./Favorite";
 
 const styles = theme => ({
   root: {
@@ -46,13 +47,9 @@ const styles = theme => ({
     overflowWrap: "break-word",
     width: "80%"
   },
-  text: {
-    cursor: "default",
-    overflowWrap: "break-word",
-    overflow: "hidden"
-  },
   itemText: {
-    overflowWrap: "break-word"
+    overflowWrap: "break-word",
+    cursor: "default"
   },
   itemCheckbox: {
     padding: "4"
@@ -64,7 +61,6 @@ const styles = theme => ({
     position: "relative"
   }
 });
-
 const CheckBox = ({ noteID, taskID, isDone, handleCheck }) => {
   const onCheck = e => {
     e.stopPropagation();
@@ -78,37 +74,6 @@ const CheckBox = ({ noteID, taskID, isDone, handleCheck }) => {
     />
   );
 };
-
-const Favorite = withStyles(theme => ({
-  favorite: {
-    position: "absolute",
-    right: "0",
-    top: "0",
-    opacity: "1",
-    transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
-  },
-  invisible: {
-    opacity: "0",
-    position: "absolute",
-    right: "0",
-    top: "0"
-  }
-}))(({ classes, noteID, isFavorite, hover, handleFavorite }) => {
-  const toggleFavorite = e => {
-    e.stopPropagation();
-    handleFavorite(noteID);
-  };
-  return (
-    <IconButton
-      color="primary"
-      aria-label="Directions"
-      onClick={toggleFavorite}
-      className={hover ? classes.favorite : classes.invisible}
-    >
-      {isFavorite ? <Star /> : <StarBorder />}
-    </IconButton>
-  );
-});
 
 class Note extends PureComponent {
   state = {
@@ -138,8 +103,11 @@ class Note extends PureComponent {
   selectNote = () => {
     this.props.onSelect(this.props.note.id);
   };
-  toggleHover = () => {
-    this.setState({ hover: !this.state.hover });
+  toggleHoverOn = () => {
+    this.setState({ hover: true });
+  };
+  toggleHoverOff = () => {
+    this.setState({ hover: false });
   };
   render() {
     const {
@@ -149,24 +117,32 @@ class Note extends PureComponent {
       handleCheck,
       handleFavorite,
       hidden,
-      note: { title, tasks, text, isFavorite, id: noteID }
+      handleColorSelect,
+      note: { title, tasks, text, isFavorite, id: noteID, color }
     } = this.props;
     const { hover } = this.state;
+    const style = {
+      visibility: hidden ? "hidden" : "visible",
+      backgroundColor: color
+    };
     return (
       <Paper
         className={classes.root}
-        style={{ visibility: hidden ? "hidden" : "visible" }}
+        style={style}
         elevation={1}
         onClick={this.selectNote}
-        onMouseEnter={this.toggleHover}
-        onMouseLeave={this.toggleHover}
+        onMouseEnter={this.toggleHoverOn}
+        onMouseLeave={this.toggleHoverOff}
       >
-        <Favorite
-          noteID={noteID}
-          hover={hover}
-          isFavorite={isFavorite}
-          handleFavorite={handleFavorite}
-        />
+        <Hidden mdDown>
+          <Favorite
+            noteID={noteID}
+            visible={hover}
+            isFavorite={isFavorite}
+            handleFavorite={handleFavorite}
+          />
+        </Hidden>
+
         <Typography className={classes.title} variant="h6" component="h3">
           {wordToMatch ? this.getHighlightedText(title, wordToMatch) : title}
         </Typography>
@@ -198,12 +174,22 @@ class Note extends PureComponent {
         )}
 
         {text && (
-          <Typography variant="body2" component="p">
+          <Typography
+            variant="body2"
+            component="p"
+            className={classes.itemText}
+          >
             {wordToMatch ? this.getHighlightedText(text, wordToMatch) : text}
           </Typography>
         )}
-
-        <NoteSettings handleDelete={onDelete} noteID={noteID} hover={hover} />
+        <Hidden mdDown>
+          <NoteSettings
+            onColorSelect={handleColorSelect}
+            onDelete={onDelete}
+            noteID={noteID}
+            visible={hover}
+          />
+        </Hidden>
       </Paper>
     );
   }

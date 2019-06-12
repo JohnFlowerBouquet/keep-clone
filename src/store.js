@@ -2,8 +2,8 @@ export const Notes = [
   {
     title: "House Jobs:",
     id: "1550353655476",
-    isFavorite: "false",
-    color: "blue",
+    isFavorite: false,
+    color: "#ffffff",
     dateCreated: "2015-03-25",
     deadline: "December 25, 2025",
     tasks: [
@@ -22,8 +22,8 @@ export const Notes = [
   {
     title: "To do Tomorrow:",
     id: "102",
-    isFavorite: "false",
-    color: "red",
+    isFavorite: false,
+    color: "#ffffff",
     dateCreated: "16.02.2019, 22:43:28",
     deadline: "December 25, 2025",
     tasks: [
@@ -42,8 +42,8 @@ export const Notes = [
   {
     title: "To do in Weekend:",
     id: "103",
-    color: "blue",
-    isFavorite: "false",
+    color: "#ffffff",
+    isFavorite: false,
     dateCreated: "19.02.2019, 22:43:28",
     deadline: "December 25, 2025",
     tasks: [
@@ -62,8 +62,8 @@ export const Notes = [
   {
     title: "My Secret Note",
     id: "104",
-    color: "blue",
-    isFavorite: "true",
+    color: "#ffffff",
+    isFavorite: true,
     dateCreated: "19.02.2019, 22:43:28",
     deadline: "December 25, 2025",
     tasks: [],

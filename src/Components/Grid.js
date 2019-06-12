@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { withStyles, Grid, Divider, Typography } from "@material-ui/core";
+import { withStyles, Grid, Typography } from "@material-ui/core";
 import Note from "../templates/Note";
 
 const styles = theme => ({
@@ -8,7 +8,6 @@ const styles = theme => ({
     margin: "0 auto 3rem",
     padding: "5px",
     [theme.breakpoints.up("sm")]: {
-      margin: "0 auto",
       padding: "0 10vw"
     }
   },
@@ -33,7 +32,8 @@ export class GridComponent extends PureComponent {
       editedNote,
       onDelete,
       wordToMatch,
-      handleFavorite
+      handleFavorite,
+      handleColorSelect
     } = this.props;
 
     const searchResults = () => {
@@ -55,64 +55,66 @@ export class GridComponent extends PureComponent {
           })
         : null;
     };
-
     const renderNotes = wordToMatch ? searchResults() : notes;
-    const someFavorites = renderNotes.some(note => note.isFavorite);
+    const favoriteNotes = [];
+    const regularNotes = [];
+    renderNotes.length &&
+      renderNotes.forEach(note =>
+        note.isFavorite ? favoriteNotes.push(note) : regularNotes.push(note)
+      );
 
     return (
       <>
-        {someFavorites && (
-          <Typography className={classes.subheading}>Favorites</Typography>
+        {favoriteNotes.length > 0 && (
+          <>
+            <Typography className={classes.subheading}>Favorites</Typography>
+            <Grid className={classes.root} container justify="flex-start">
+              {favoriteNotes.map(note => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={"auto"}
+                  key={note.id}
+                  className={note.id === editedNote ? classes.ghost : null}
+                >
+                  <Note
+                    note={note}
+                    wordToMatch={wordToMatch}
+                    handleCheck={handleCheck}
+                    handleFavorite={handleFavorite}
+                    onDelete={onDelete}
+                    onSelect={onSelect}
+                    handleColorSelect={handleColorSelect}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </>
         )}
-        <Grid className={classes.root} container justify="flex-start">
-          {renderNotes
-            .filter(note => note.isFavorite)
-            .map(note => (
-              <Grid
-                item
-                xs={12}
-                sm={"auto"}
-                key={note.id}
-                className={note.id === editedNote ? classes.ghost : null}
-              >
-                <Note
-                  note={note}
-                  wordToMatch={wordToMatch}
-                  handleCheck={handleCheck}
-                  handleFavorite={handleFavorite}
-                  onDelete={onDelete}
-                  onSelect={onSelect}
-                />
-              </Grid>
-            ))}
-        </Grid>
-        {someFavorites && (
-          <Divider variant="middle" className={classes.divider} />
-        )}
-        {someFavorites && (
+
+        {favoriteNotes.length > 0 && (
           <Typography className={classes.subheading}>Others</Typography>
         )}
         <Grid className={classes.root} container justify="flex-start">
-          {renderNotes
-            .filter(note => !note.isFavorite)
-            .map(note => (
-              <Grid
-                item
-                xs={12}
-                sm={"auto"}
-                key={note.id}
-                className={note.id === editedNote ? classes.ghost : null}
-              >
-                <Note
-                  note={note}
-                  wordToMatch={wordToMatch}
-                  handleCheck={handleCheck}
-                  handleFavorite={handleFavorite}
-                  onDelete={onDelete}
-                  onSelect={onSelect}
-                />
-              </Grid>
-            ))}
+          {regularNotes.map(note => (
+            <Grid
+              item
+              xs={12}
+              sm={"auto"}
+              key={note.id}
+              className={note.id === editedNote ? classes.ghost : null}
+            >
+              <Note
+                note={note}
+                wordToMatch={wordToMatch}
+                handleCheck={handleCheck}
+                handleFavorite={handleFavorite}
+                onDelete={onDelete}
+                onSelect={onSelect}
+                handleColorSelect={handleColorSelect}
+              />
+            </Grid>
+          ))}
         </Grid>
       </>
     );
