@@ -28,8 +28,9 @@ const ModalComponent = ({
       <EditNote
         note={editedNote}
         onUpdate={onUpdate}
-        focus={true}
+        onClose={onDeselect}
         onDelete={onDelete}
+        focus={true}
       />
     </Modal>
   );

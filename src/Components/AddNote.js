@@ -145,6 +145,7 @@ class NewNote extends Component {
       id: `note${new Date().getTime().toString()}`,
       isFavorite: false,
       text: "",
+      color: "#ffffff",
       tasks: [
         {
           text: "",
@@ -153,6 +154,16 @@ class NewNote extends Component {
         }
       ]
     }));
+  };
+
+  handleSave = () => {
+    const { isOpen } = this.props;
+    if (isOpen) {
+      const newNote = this.state;
+      newNote.tasks.pop();
+      this.props.onAdd(newNote);
+    }
+    this.setState(() => this.getInitialState());
   };
 
   handleColorSelect = color => {
@@ -267,7 +278,9 @@ class NewNote extends Component {
             <NoteSettings
               onDelete={this.handleDelete}
               onColorSelect={this.handleColorSelect}
+              onSave={this.handleSave}
               visible={true}
+              isEditing={true}
             />
           )}
         </Paper>

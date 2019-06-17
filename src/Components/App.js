@@ -42,11 +42,16 @@ class App extends Component {
     }));
 
   handleUpdateNotes = updatedNote =>
-    this.setState(({ Notes }) => ({
-      Notes: [
-        ...Notes.map(note => (note.id === updatedNote.id ? updatedNote : note))
-      ]
-    }));
+    this.setState(
+      ({ Notes }) => ({
+        Notes: [
+          ...Notes.map(note =>
+            note.id === updatedNote.id ? updatedNote : note
+          )
+        ]
+      }),
+      () => this.state.editMode && this.handleModalClose()
+    );
 
   handleAddNote = addedNote => {
     if (addedNote.title || addedNote.text || addedNote.tasks.length > 1) {

@@ -7,10 +7,12 @@ import {
 } from "@material-ui/core/";
 import Checklist from "./Checklist";
 import NoteSettings from "../templates/NoteSettings";
+import Favorite from "../templates/Favorite";
 
 const styles = theme => ({
   root: {
     display: "flex",
+    position: "relative",
     flexWrap: "wrap",
     alignItems: "center",
     width: 300,
@@ -41,8 +43,14 @@ const StyledInput = withStyles(theme => ({
     marginBottom: 10,
     fontWeight: "bold",
     padding: "12px 16px",
+    '&[label="Title"]': {
+      width: "calc(100% - 48px)"
+    },
     [theme.breakpoints.up("sm")]: {
-      width: "100%"
+      width: "100%",
+      '&[label="Title"]': {
+        width: "calc(100% - 48px)"
+      }
     }
   },
   inputMultiline: {
@@ -97,6 +105,17 @@ class EditNote extends Component {
     }));
   };
 
+  handleFavorite = () => {
+    this.setState(({ isFavorite }) => ({
+      isFavorite: !isFavorite
+    }));
+  };
+
+  handleSave = () => {
+    const editedNote = Object.assign({}, this.state);
+    this.props.onUpdate(editedNote);
+  };
+
   componentWillUnmount() {
     const editedNote = Object.assign({}, this.state);
     editedNote.tasks.pop();
@@ -104,7 +123,7 @@ class EditNote extends Component {
   }
 
   render() {
-    const { title, text, tasks, id: noteID, color } = this.state;
+    const { title, id: noteID, isFavorite, text, tasks, color } = this.state;
     const { classes, onDelete } = this.props;
     const style = {
       backgroundColor: color
@@ -141,23 +160,33 @@ class EditNote extends Component {
           elevation={1}
           display="flex"
         >
-          <StyledInput
-            label="Title"
-            autoComplete="off"
-            value={title}
-            name="title"
-            placeholder={"Add Title..."}
-            onChange={this.handleChange}
-            multiline
-            fullWidth
-            tabIndex="-1"
-          />
+          <>
+            <Favorite
+              noteID={noteID}
+              visible={true}
+              isFavorite={isFavorite}
+              handleFavorite={this.handleFavorite}
+            />
+            <StyledInput
+              label="Title"
+              autoComplete="off"
+              value={title}
+              name="title"
+              placeholder={"Add Title..."}
+              onChange={this.handleChange}
+              multiline
+              fullWidth
+              tabIndex="-1"
+            />
+          </>
           {Input}
           <NoteSettings
-            visible={true}
             onDelete={onDelete}
             noteID={noteID}
             onColorSelect={this.handleColorSelect}
+            onSave={this.handleSave}
+            visible={true}
+            isEditing={true}
           />
         </Paper>
       </ClickAwayListener>

@@ -116,13 +116,11 @@ class Note extends PureComponent {
       wordToMatch,
       handleCheck,
       handleFavorite,
-      hidden,
       handleColorSelect,
       note: { title, tasks, text, isFavorite, id: noteID, color }
     } = this.props;
     const { hover } = this.state;
     const style = {
-      visibility: hidden ? "hidden" : "visible",
       backgroundColor: color
     };
     return (
@@ -134,7 +132,7 @@ class Note extends PureComponent {
         onMouseEnter={this.toggleHoverOn}
         onMouseLeave={this.toggleHoverOff}
       >
-        <Hidden mdDown>
+        <Hidden lgUp>
           <Favorite
             noteID={noteID}
             visible={hover}
@@ -182,12 +180,13 @@ class Note extends PureComponent {
             {wordToMatch ? this.getHighlightedText(text, wordToMatch) : text}
           </Typography>
         )}
-        <Hidden mdDown>
+        <Hidden lgUp>
           <NoteSettings
             onColorSelect={handleColorSelect}
             onDelete={onDelete}
             noteID={noteID}
             visible={hover}
+            isEditing={false}
           />
         </Hidden>
       </Paper>
