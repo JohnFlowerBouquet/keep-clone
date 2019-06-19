@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles, IconButton } from "@material-ui/core";
+import { withStyles, IconButton, Tooltip } from "@material-ui/core";
 import { Star, StarBorder } from "@material-ui/icons";
 
 const Favorite = withStyles(theme => ({
@@ -23,14 +23,16 @@ const Favorite = withStyles(theme => ({
     handleFavorite(noteID);
   };
   return (
-    <IconButton
-      color="primary"
-      aria-label="Directions"
-      onClick={toggleFavorite}
-      className={visible ? classes.favorite : classes.invisible}
-    >
-      {isFavorite ? <Star /> : <StarBorder />}
-    </IconButton>
+    <Tooltip title="Add to favorites" placement="top">
+      <IconButton
+        color="primary"
+        aria-label="Favorite"
+        onClick={toggleFavorite}
+        className={visible ? classes.favorite : classes.invisible}
+      >
+        {isFavorite ? <Star /> : <StarBorder />}
+      </IconButton>
+    </Tooltip>
   );
 });
 

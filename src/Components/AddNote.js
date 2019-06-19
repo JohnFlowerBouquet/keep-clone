@@ -5,7 +5,8 @@ import {
   InputBase,
   IconButton,
   ClickAwayListener,
-  Typography
+  Typography,
+  Tooltip
 } from "@material-ui/core/";
 
 import {
@@ -247,15 +248,21 @@ class NewNote extends Component {
 
           {!isOpen && (
             <div className={classes.buttonsContainer}>
-              <IconButton
-                color="primary"
-                onClick={() => selectNoteType("list")}
-                className={classes.iconButton}
-                aria-label="Add List Note"
-                name="list"
+              <Tooltip
+                disableFocusListener
+                disableTouchListener
+                title="New list"
               >
-                <CheckBoxOutlined />
-              </IconButton>
+                <IconButton
+                  color="primary"
+                  onClick={() => selectNoteType("list")}
+                  className={classes.iconButton}
+                  aria-label="Add List Note"
+                  name="list"
+                >
+                  <CheckBoxOutlined />
+                </IconButton>
+              </Tooltip>
               <IconButton
                 color="primary"
                 disabled

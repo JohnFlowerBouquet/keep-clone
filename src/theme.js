@@ -12,5 +12,12 @@ export default createMuiTheme({
   },
   typography: {
     useNextVariants: true
+  },
+  overrides: {
+    MuiTooltip: {
+      popper: {
+        marginBottom: "-10px"
+      }
+    }
   }
 });

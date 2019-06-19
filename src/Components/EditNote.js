@@ -187,6 +187,7 @@ class EditNote extends Component {
             onSave={this.handleSave}
             visible={true}
             isEditing={true}
+            isModal={true}
           />
         </Paper>
       </ClickAwayListener>

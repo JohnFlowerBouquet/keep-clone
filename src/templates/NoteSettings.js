@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles, IconButton } from "@material-ui/core";
-import { Delete, AlarmAdd, Save } from "@material-ui/icons";
+import { withStyles, IconButton, Tooltip } from "@material-ui/core";
+import { Delete, Save } from "@material-ui/icons";
 import ColorsPalette from "./ColorsPalette";
+import AddAlarm from "./Alarm";
 
 const styles = theme => ({
   visible: {
@@ -29,22 +30,16 @@ const DeleteButton = ({ noteID = null, onDelete }) => {
     onDelete();
   };
   return (
-    <IconButton
-      color="primary"
-      aria-label="Delete note"
-      size="small"
-      onClick={noteID ? handleDelete : handleClear}
-    >
-      <Delete />
-    </IconButton>
-  );
-};
-
-const AlarmButton = ({ noteID }) => {
-  return (
-    <IconButton color="primary" aria-label="Set alarm" size="small">
-      <AlarmAdd />
-    </IconButton>
+    <Tooltip title={noteID ? "Delete note" : "Clear inputs"} placement="bottom">
+      <IconButton
+        color="primary"
+        aria-label="Delete note"
+        size="small"
+        onClick={noteID ? handleDelete : handleClear}
+      >
+        <Delete />
+      </IconButton>
+    </Tooltip>
   );
 };
 
@@ -54,14 +49,16 @@ const SaveButton = ({ noteID, onSave }) => {
     onSave();
   };
   return (
-    <IconButton
-      color="primary"
-      aria-label="Save note"
-      size="small"
-      onClick={handleSave}
-    >
-      <Save />
-    </IconButton>
+    <Tooltip title="Save note" placement="bottom">
+      <IconButton
+        color="primary"
+        aria-label="Save note"
+        size="small"
+        onClick={handleSave}
+      >
+        <Save />
+      </IconButton>
+    </Tooltip>
   );
 };
 
@@ -77,8 +74,13 @@ const NoteSettings = ({
   return (
     <div className={visible ? classes.visible : classes.invisible}>
       {isEditing && <SaveButton noteID={noteID} onSave={onSave} />}
-      <ColorsPalette noteID={noteID} onColorSelect={onColorSelect} />
-      <AlarmButton noteID={noteID} />
+      <ColorsPalette
+        noteID={noteID}
+        onColorSelect={onColorSelect}
+        isEditing={isEditing}
+        visible={visible}
+      />
+      <AddAlarm noteID={noteID} isEditing={isEditing} visible={visible} />
       <DeleteButton noteID={noteID} onDelete={onDelete} />
     </div>
   );

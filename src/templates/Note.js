@@ -132,7 +132,7 @@ class Note extends PureComponent {
         onMouseEnter={this.toggleHoverOn}
         onMouseLeave={this.toggleHoverOff}
       >
-        <Hidden lgUp>
+        <Hidden mdDown>
           <Favorite
             noteID={noteID}
             visible={hover}
@@ -180,7 +180,7 @@ class Note extends PureComponent {
             {wordToMatch ? this.getHighlightedText(text, wordToMatch) : text}
           </Typography>
         )}
-        <Hidden lgUp>
+        <Hidden mdDown>
           <NoteSettings
             onColorSelect={handleColorSelect}
             onDelete={onDelete}
