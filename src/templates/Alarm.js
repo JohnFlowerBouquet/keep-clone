@@ -1,63 +1,211 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import { AlarmAdd } from "@material-ui/icons";
-import { IconButton, Tooltip, Popper, Fade, Paper } from "@material-ui/core";
+import { AlarmAdd, CheckCircle, Cancel } from "@material-ui/icons";
+import {
+  IconButton,
+  Tooltip,
+  Popper,
+  Fade,
+  Paper,
+  Input,
+  InputLabel,
+  FormControl
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles({
   root: {
-    color: "black"
+    padding: "6px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  popper: {
+    zIndex: "1400"
+  },
+  formControl: {
+    marginTop: "10px"
+  },
+  formLabel: {
+    left: "10%"
+  },
+  textField: {
+    width: "50px"
+  },
+  inputTwoChars: {
+    width: "22px"
+  },
+  inputFourChars: {
+    width: "42px"
   }
 });
 
 const Alarm = ({ noteID = null }) => {
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-    age: "",
-    name: "hai"
+  const today = new Date();
+  const [date, setDate] = React.useState({
+    day: formatNumber(today.getDay()),
+    month: formatNumber(today.getMonth()),
+    year: today.getFullYear(),
+    hh: formatNumber(today.getHours()),
+    mm: formatNumber(today.getMinutes())
   });
+  const prevDate = usePreviousDate(date);
 
-  function handleChange(event) {
-    event.stopPropagation();
-    setValues(oldValues => ({
-      ...oldValues,
-      [event.target.name]: event.target.value
-    }));
+  function usePreviousDate(date) {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = date;
+    });
+    return ref.current;
   }
 
+  function handleChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+    if (checkInput(name, value)) {
+      setDate({ ...prevDate, [name]: value });
+    }
+    return;
+  }
+
+  function formatNumber(num) {
+    return num.toString().length < 2 ? "0" + num : num;
+  }
+
+  function checkInput(name, value) {
+    if (name === "day") {
+      return value > 31 || value < 0 ? false : true;
+    }
+    if (name === "month") {
+      return value > 12 || value < 0 ? false : true;
+    }
+    if (name === "year") {
+      return value < 2019 ? false : true;
+    }
+    if (name === "hh") {
+      return value > 24 || value < 0 ? false : true;
+    }
+    if (name === "mm") {
+      return value > 60 || value < 0 ? false : true;
+    }
+  }
+
+  /*const handleChange = name => event => {
+    setDate({ ...date, [name]: event.target.value });
+  };
+  const handleClick = () => {
+    this.setState({ isOpen: true });
+}
+
+handleCancel = () => {
+    this.setState({ isOpen: false });
+}*/
+
   return (
-    <form className={classes.root} autoComplete="off">
-      <FormControl className={classes.formControl}>
-        <InputLabel shrink htmlFor="age-label-placeholder">
-          Age
-        </InputLabel>
-        <Select
-          value={values.age}
-          onChange={handleChange}
-          input={<Input name="age" id="age-label-placeholder" />}
-          displayEmpty
-          name="age"
-          className={classes.selectEmpty}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem onClick={e => e.stopPropagation()} value={10}>
-            Ten
-          </MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-        <FormHelperText>Label + placeholder</FormHelperText>
-      </FormControl>
-    </form>
+    <div className={classes.root}>
+      <div className={classes.date}>
+        <FormControl className={classes.formControl}>
+          <InputLabel className={classes.formLabel} htmlFor="input-day">
+            DD
+          </InputLabel>
+          <Input
+            className={classes.inputTwoChars}
+            id="input-dD"
+            name="day"
+            value={date.day}
+            onChange={handleChange}
+            inputProps={{
+              maxLength: "2",
+              style: {
+                padding: "0"
+              }
+            }}
+            endAdornment={"-"}
+          />
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel className={classes.formLabel} htmlFor="input-month">
+            MM
+          </InputLabel>
+          <Input
+            className={classes.inputTwoChars}
+            id="input-month"
+            name="month"
+            value={date.month}
+            onChange={handleChange}
+            inputProps={{
+              maxLength: "2",
+              style: {
+                padding: "0"
+              }
+            }}
+            endAdornment={"-"}
+          />
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel className={classes.formLabel} htmlFor="input-year">
+            YYYY
+          </InputLabel>
+          <Input
+            className={classes.inputFourChars}
+            id="input-year"
+            name="year"
+            value={date.year}
+            onChange={handleChange}
+            inputProps={{
+              maxLength: "4",
+              style: {
+                padding: "0"
+              }
+            }}
+          />
+        </FormControl>
+      </div>
+      <div classes={classes.time}>
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="input-hour">HH</InputLabel>
+          <Input
+            className={classes.inputTwoChars}
+            id="input-hour"
+            name="hh"
+            value={date.hh}
+            onChange={handleChange}
+            inputProps={{
+              maxLength: "2",
+              style: {
+                padding: "0"
+              }
+            }}
+            endAdornment={":"}
+          />
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="input-minute">MM</InputLabel>
+          <Input
+            className={classes.inputTwoChars}
+            id="input-minute"
+            name="mm"
+            value={date.mm}
+            onChange={handleChange}
+            inputProps={{
+              maxLength: "2",
+              style: {
+                padding: "0"
+              }
+            }}
+          />
+        </FormControl>
+      </div>
+      <div className={classes.formControls}>
+        <IconButton color="primary" aria-label="Change color" size="small">
+          <CheckCircle />
+        </IconButton>
+        <IconButton color="primary" aria-label="Change color" size="small">
+          <Cancel />
+        </IconButton>
+      </div>
+    </div>
   );
 };
 
@@ -81,6 +229,7 @@ const AlarmButton = ({ handleOpen }) => {
 };
 
 const AddAlarm = ({ noteID, isEditing = false, visible }) => {
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "alarm-popper" : undefined;
@@ -106,8 +255,9 @@ const AddAlarm = ({ noteID, isEditing = false, visible }) => {
           id={id}
           open={open}
           anchorEl={anchorEl}
+          className={classes.popper}
           transition
-          placement="top"
+          placement="bottom"
           disablePortal={isEditing ? true : false}
         >
           {({ TransitionProps }) => (
