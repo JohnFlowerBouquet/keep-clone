@@ -59,6 +59,13 @@ const styles = theme => ({
   },
   favorite: {
     position: "relative"
+  },
+  alarm: {
+    backgroundColor: "rgb(251, 140, 0, 0.1)",
+    borderRadius: "0 10px 10px 0",
+    padding: "2px",
+    margin: "2px 0",
+    marginLeft: "-16px"
   }
 });
 const CheckBox = ({ noteID, taskID, isDone, handleCheck }) => {
@@ -117,7 +124,8 @@ class Note extends PureComponent {
       handleCheck,
       handleFavorite,
       handleColorSelect,
-      note: { title, tasks, text, isFavorite, id: noteID, color }
+      handleAlarmAdd,
+      note: { title, tasks, text, isFavorite, id: noteID, color, alarm }
     } = this.props;
     const { hover } = this.state;
     const style = {
@@ -144,6 +152,15 @@ class Note extends PureComponent {
         <Typography className={classes.title} variant="h6" component="h3">
           {wordToMatch ? this.getHighlightedText(title, wordToMatch) : title}
         </Typography>
+        {alarm && (
+          <Typography
+            variant="subtitle2"
+            component="p"
+            className={classes.alarm}
+          >
+            {alarm.text} : {alarm.day} - {alarm.month} - {alarm.year}
+          </Typography>
+        )}
         {tasks.length !== 0 && (
           <List className={classes.list}>
             {tasks.map(({ text, isDone, id }, index) => (
@@ -183,6 +200,7 @@ class Note extends PureComponent {
         <Hidden mdDown>
           <NoteSettings
             onColorSelect={handleColorSelect}
+            onAlarmAdd={handleAlarmAdd}
             onDelete={onDelete}
             noteID={noteID}
             visible={hover}

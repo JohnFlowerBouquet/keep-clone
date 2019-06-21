@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withStyles, CssBaseline } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import Header from "./Header";
 import AddNote from "./AddNote";
 import Grid from "./Grid";
@@ -110,11 +110,22 @@ class App extends Component {
       ]
     }));
 
+  handleAlarmAdd = (alarm, noteID) =>
+    this.setState(
+      ({ Notes }) => ({
+        Notes: [
+          ...Notes.map(note =>
+            note.id === noteID ? { ...note, alarm: alarm } : note
+          )
+        ]
+      }),
+      () => console.log(this.state)
+    );
+
   render() {
     const { Notes, wordToMatch, editMode, activeNote } = this.state;
     return (
       <React.Fragment>
-        <CssBaseline />
         <Header handleSearch={this.handleSearch} wordToMatch={wordToMatch} />
         <AddNote
           onAdd={this.handleAddNote}
@@ -132,6 +143,7 @@ class App extends Component {
           onDelete={this.handleDeleteNote}
           wordToMatch={wordToMatch.toUpperCase()}
           handleColorSelect={this.handleColorSelect}
+          handleAlarmAdd={this.handleAlarmAdd}
         />
         <ModalComponent
           editMode={editMode}

@@ -46,6 +46,12 @@ const styles = theme => ({
   },
   iconButton: {
     padding: 5
+  },
+  alarm: {
+    backgroundColor: "rgb(251, 140, 0, 0.1)",
+    borderRadius: "0 10px 10px 0",
+    padding: "2px",
+    margin: "2px 0"
   }
 });
 
@@ -173,8 +179,22 @@ class NewNote extends Component {
     }));
   };
 
+  handleAlarmAdd = alarm => {
+    this.setState(() => ({
+      alarm: alarm
+    }));
+  };
+
   render() {
-    const { title, id: noteID, isFavorite, text, tasks, color } = this.state;
+    const {
+      title,
+      id: noteID,
+      isFavorite,
+      text,
+      tasks,
+      color,
+      alarm
+    } = this.state;
     const { classes, selectNoteType, type, isOpen } = this.props;
     const style = {
       backgroundColor: color
@@ -242,6 +262,15 @@ class NewNote extends Component {
                 multiline
                 fullWidth
               />
+              {alarm && (
+                <Typography
+                  variant="subtitle2"
+                  component="p"
+                  className={classes.alarm}
+                >
+                  {alarm.text} : {alarm.day} - {alarm.month} - {alarm.year}
+                </Typography>
+              )}
             </>
           )}
           {Input}
@@ -285,6 +314,7 @@ class NewNote extends Component {
             <NoteSettings
               onDelete={this.handleDelete}
               onColorSelect={this.handleColorSelect}
+              onAlarmAdd={this.handleAlarmAdd}
               onSave={this.handleSave}
               visible={true}
               isEditing={true}

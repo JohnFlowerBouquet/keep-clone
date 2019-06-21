@@ -33,7 +33,8 @@ export class GridComponent extends PureComponent {
       onDelete,
       wordToMatch,
       handleFavorite,
-      handleColorSelect
+      handleColorSelect,
+      handleAlarmAdd
     } = this.props;
 
     const searchResults = () => {
@@ -85,6 +86,7 @@ export class GridComponent extends PureComponent {
                     onDelete={onDelete}
                     onSelect={onSelect}
                     handleColorSelect={handleColorSelect}
+                    handleAlarmAdd={handleAlarmAdd}
                   />
                 </Grid>
               ))}
@@ -112,6 +114,7 @@ export class GridComponent extends PureComponent {
                 onDelete={onDelete}
                 onSelect={onSelect}
                 handleColorSelect={handleColorSelect}
+                handleAlarmAdd={handleAlarmAdd}
               />
             </Grid>
           ))}

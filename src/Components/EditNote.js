@@ -3,7 +3,8 @@ import {
   withStyles,
   Paper,
   InputBase,
-  ClickAwayListener
+  ClickAwayListener,
+  Typography
 } from "@material-ui/core/";
 import Checklist from "./Checklist";
 import NoteSettings from "../templates/NoteSettings";
@@ -32,6 +33,12 @@ const styles = theme => ({
   },
   iconButton: {
     padding: 5
+  },
+  alarm: {
+    backgroundColor: "rgb(251, 140, 0, 0.1)",
+    borderRadius: "0 10px 10px 0",
+    padding: "2px 4px 2px 4px",
+    margin: "2px 0"
   }
 });
 
@@ -40,7 +47,7 @@ const StyledInput = withStyles(theme => ({
     display: "block",
     marginLeft: 8,
     width: 400,
-    marginBottom: 10,
+    marginBottom: 5,
     fontWeight: "bold",
     padding: "12px 16px",
     '&[label="Title"]': {
@@ -105,6 +112,12 @@ class EditNote extends Component {
     }));
   };
 
+  handleAlarmAdd = alarm => {
+    this.setState(() => ({
+      alarm: alarm
+    }));
+  };
+
   handleFavorite = () => {
     this.setState(({ isFavorite }) => ({
       isFavorite: !isFavorite
@@ -123,7 +136,15 @@ class EditNote extends Component {
   }
 
   render() {
-    const { title, id: noteID, isFavorite, text, tasks, color } = this.state;
+    const {
+      title,
+      id: noteID,
+      isFavorite,
+      text,
+      tasks,
+      color,
+      alarm
+    } = this.state;
     const { classes, onDelete } = this.props;
     const style = {
       backgroundColor: color
@@ -178,12 +199,22 @@ class EditNote extends Component {
               fullWidth
               tabIndex="-1"
             />
+            {alarm && (
+              <Typography
+                variant="subtitle2"
+                component="p"
+                className={classes.alarm}
+              >
+                {alarm.text} : {alarm.day} - {alarm.month} - {alarm.year}
+              </Typography>
+            )}
           </>
           {Input}
           <NoteSettings
             onDelete={onDelete}
             noteID={noteID}
             onColorSelect={this.handleColorSelect}
+            onAlarmAdd={this.handleAlarmAdd}
             onSave={this.handleSave}
             visible={true}
             isEditing={true}

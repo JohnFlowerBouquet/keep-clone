@@ -1,9 +1,10 @@
-import React, { Component } from "react";
-import { AppBar, Typography, withStyles } from "@material-ui/core/";
+import React from "react";
+import { AppBar, Typography } from "@material-ui/core/";
 import { Description } from "@material-ui/icons";
 import SearchBar from "./SearchBar";
+import { makeStyles } from "@material-ui/styles";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "row",
@@ -31,23 +32,21 @@ const styles = theme => ({
       fontSize: "1.5rem"
     }
   }
-});
+}));
 
-export class Header extends Component {
-  render() {
-    const { classes, handleSearch, wordToMatch } = this.props;
-    return (
-      <AppBar className={classes.root}>
-        <div className={classes.container}>
-          <Description className={classes.logo} />
-          <Typography className={classes.title} variant="h5" color="inherit">
-            Keep-clone
-          </Typography>
-        </div>
-        <SearchBar handleSearch={handleSearch} wordToMatch={wordToMatch} />
-      </AppBar>
-    );
-  }
-}
+const Header = ({ handleSearch, wordToMatch }) => {
+  const classes = useStyles();
+  return (
+    <AppBar className={classes.root}>
+      <div className={classes.container}>
+        <Description className={classes.logo} />
+        <Typography className={classes.title} variant="h5" color="inherit">
+          Keep-clone
+        </Typography>
+      </div>
+      <SearchBar handleSearch={handleSearch} wordToMatch={wordToMatch} />
+    </AppBar>
+  );
+};
 
-export default withStyles(styles)(Header);
+export default Header;

@@ -34,7 +34,6 @@ const DeleteButton = ({ noteID = null, onDelete }) => {
       <IconButton
         color="primary"
         aria-label="Delete note"
-        size="small"
         onClick={noteID ? handleDelete : handleClear}
       >
         <Delete />
@@ -50,12 +49,7 @@ const SaveButton = ({ noteID, onSave }) => {
   };
   return (
     <Tooltip title="Save note" placement="bottom">
-      <IconButton
-        color="primary"
-        aria-label="Save note"
-        size="small"
-        onClick={handleSave}
-      >
+      <IconButton color="primary" aria-label="Save note" onClick={handleSave}>
         <Save />
       </IconButton>
     </Tooltip>
@@ -69,6 +63,7 @@ const NoteSettings = ({
   onDelete,
   onSave,
   onColorSelect,
+  onAlarmAdd,
   isEditing
 }) => {
   return (
@@ -80,7 +75,12 @@ const NoteSettings = ({
         isEditing={isEditing}
         visible={visible}
       />
-      <AddAlarm noteID={noteID} isEditing={isEditing} visible={visible} />
+      <AddAlarm
+        noteID={noteID}
+        onAlarmAdd={onAlarmAdd}
+        isEditing={isEditing}
+        visible={visible}
+      />
       <DeleteButton noteID={noteID} onDelete={onDelete} />
     </div>
   );

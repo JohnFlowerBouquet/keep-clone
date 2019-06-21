@@ -43,12 +43,7 @@ const ColorsButton = ({ handleOpen }) => {
   };
   return (
     <Tooltip title="Change color" placement="bottom">
-      <IconButton
-        color="primary"
-        aria-label="Change color"
-        size="small"
-        onClick={onOpen}
-      >
+      <IconButton color="primary" aria-label="Change color" onClick={onOpen}>
         <ColorLens />
       </IconButton>
     </Tooltip>

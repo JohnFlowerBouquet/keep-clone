@@ -40,7 +40,7 @@ const useStyles = makeStyles({
   }
 });
 
-const Alarm = ({ noteID = null }) => {
+const Alarm = ({ noteID = null, onAlarmAdd, handleClose }) => {
   const classes = useStyles();
   const today = new Date();
   const [date, setDate] = React.useState({
@@ -48,7 +48,8 @@ const Alarm = ({ noteID = null }) => {
     month: formatNumber(today.getMonth()),
     year: today.getFullYear(),
     hh: formatNumber(today.getHours()),
-    mm: formatNumber(today.getMinutes())
+    mm: formatNumber(today.getMinutes()),
+    text: "Time left"
   });
   const prevDate = usePreviousDate(date);
 
@@ -60,9 +61,9 @@ const Alarm = ({ noteID = null }) => {
     return ref.current;
   }
 
-  function handleChange(event) {
-    const name = event.target.name;
-    const value = event.target.value;
+  function handleChange(e) {
+    const name = e.target.name;
+    const value = e.target.value;
     if (checkInput(name, value)) {
       setDate({ ...prevDate, [name]: value });
     }
@@ -91,6 +92,12 @@ const Alarm = ({ noteID = null }) => {
     }
   }
 
+  function handleAlarmAdd(e) {
+    e.stopPropagation();
+    onAlarmAdd(date, noteID);
+    handleClose();
+  }
+
   /*const handleChange = name => event => {
     setDate({ ...date, [name]: event.target.value });
   };
@@ -103,7 +110,26 @@ handleCancel = () => {
 }*/
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} onClick={e => e.stopPropagation()}>
+      <div className={classes.name}>
+        <FormControl className={classes.formControl}>
+          <InputLabel className={classes.formLabel} htmlFor="input-name">
+            Text
+          </InputLabel>
+          <Input
+            className={classes.inputName}
+            id="input-name"
+            name="name"
+            value={date.text}
+            onChange={handleChange}
+            inputProps={{
+              style: {
+                padding: "0"
+              }
+            }}
+          />
+        </FormControl>
+      </div>
       <div className={classes.date}>
         <FormControl className={classes.formControl}>
           <InputLabel className={classes.formLabel} htmlFor="input-day">
@@ -161,8 +187,6 @@ handleCancel = () => {
             }}
           />
         </FormControl>
-      </div>
-      <div classes={classes.time}>
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="input-hour">HH</InputLabel>
           <Input
@@ -198,7 +222,12 @@ handleCancel = () => {
         </FormControl>
       </div>
       <div className={classes.formControls}>
-        <IconButton color="primary" aria-label="Change color" size="small">
+        <IconButton
+          color="primary"
+          aria-label="Change color"
+          size="small"
+          onClick={handleAlarmAdd}
+        >
           <CheckCircle />
         </IconButton>
         <IconButton color="primary" aria-label="Change color" size="small">
@@ -216,19 +245,14 @@ const AlarmButton = ({ handleOpen }) => {
   };
   return (
     <Tooltip title="Add alarm" placement="bottom">
-      <IconButton
-        color="primary"
-        aria-label="Add alarm"
-        size="small"
-        onClick={onOpen}
-      >
+      <IconButton color="primary" aria-label="Add alarm" onClick={onOpen}>
         <AlarmAdd />
       </IconButton>
     </Tooltip>
   );
 };
 
-const AddAlarm = ({ noteID, isEditing = false, visible }) => {
+const AddAlarm = ({ noteID, onAlarmAdd, isEditing = false, visible }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -238,7 +262,7 @@ const AddAlarm = ({ noteID, isEditing = false, visible }) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   }
   function handleClose() {
-    //setAnchorEl(null);
+    setAnchorEl(null);
   }
 
   useEffect(() => {
@@ -263,7 +287,11 @@ const AddAlarm = ({ noteID, isEditing = false, visible }) => {
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
               <Paper>
-                <Alarm noteID={noteID} />
+                <Alarm
+                  noteID={noteID}
+                  onAlarmAdd={onAlarmAdd}
+                  handleClose={handleClose}
+                />
               </Paper>
             </Fade>
           )}
