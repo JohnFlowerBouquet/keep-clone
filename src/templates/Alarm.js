@@ -9,7 +9,11 @@ import {
   Paper,
   Input,
   InputLabel,
-  FormControl
+  FormControl,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
@@ -23,11 +27,8 @@ const useStyles = makeStyles({
   popper: {
     zIndex: "1400"
   },
-  formControl: {
+  date: {
     marginTop: "10px"
-  },
-  formLabel: {
-    left: "10%"
   },
   textField: {
     width: "50px"
@@ -43,20 +44,20 @@ const useStyles = makeStyles({
 const Alarm = ({ noteID = null, onAlarmAdd, handleClose }) => {
   const classes = useStyles();
   const today = new Date();
-  const [date, setDate] = React.useState({
-    day: formatNumber(today.getDay()),
-    month: formatNumber(today.getMonth()),
+  const [alarm, setAlarm] = React.useState({
+    day: formatNumber(today.getDate()),
+    month: formatNumber(today.getMonth() + 1),
     year: today.getFullYear(),
-    hh: formatNumber(today.getHours()),
+    hh: formatNumber(today.getHours() < 23 ? today.getHours() + 1 : 0),
     mm: formatNumber(today.getMinutes()),
-    text: "Time left"
+    label: "Time left"
   });
-  const prevDate = usePreviousDate(date);
+  const prevAlarmState = usePreviousAlarmState(alarm);
 
-  function usePreviousDate(date) {
+  function usePreviousAlarmState(alarm) {
     const ref = useRef();
     useEffect(() => {
-      ref.current = date;
+      ref.current = alarm;
     });
     return ref.current;
   }
@@ -64,16 +65,15 @@ const Alarm = ({ noteID = null, onAlarmAdd, handleClose }) => {
   function handleChange(e) {
     const name = e.target.name;
     const value = e.target.value;
-    if (checkInput(name, value)) {
-      setDate({ ...prevDate, [name]: value });
-    }
+    console.log(alarm);
+    setAlarm({ ...prevAlarmState, [name]: value });
     return;
   }
 
   function formatNumber(num) {
     return num.toString().length < 2 ? "0" + num : num;
   }
-
+  //TODO check input date
   function checkInput(name, value) {
     if (name === "day") {
       return value > 31 || value < 0 ? false : true;
@@ -93,13 +93,35 @@ const Alarm = ({ noteID = null, onAlarmAdd, handleClose }) => {
   }
 
   function handleAlarmAdd(e) {
+    onAlarmAdd(alarm, noteID);
     e.stopPropagation();
-    onAlarmAdd(date, noteID);
     handleClose();
   }
 
+  function handleAlarmType(alarm) {
+    if (alarm.label === "Time left") {
+      const futureDate = `${alarm.year}-${alarm.month}-${alarm.day}T${
+        alarm.hh
+      }:${alarm.mm}:00`;
+      const countDownDate = new Date(futureDate).getTime();
+      const now = new Date().getTime();
+      const timeLeft = countDownDate - now;
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(
+        (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      return `${days > 0 ? days + "d" : ""} ${days < 2 ? hours + "h" : ""} ${
+        days < 1 ? minutes + "m" : ""
+      }`;
+    }
+    if (alarm.label === "On date") {
+      return `${alarm.day} - ${alarm.month} - ${alarm.year}`;
+    }
+  }
+
   /*const handleChange = name => event => {
-    setDate({ ...date, [name]: event.target.value });
+    setAlarm({ ...date, [name]: event.target.value });
   };
   const handleClick = () => {
     this.setState({ isOpen: true });
@@ -111,26 +133,36 @@ handleCancel = () => {
 
   return (
     <div className={classes.root} onClick={e => e.stopPropagation()}>
-      <div className={classes.name}>
-        <FormControl className={classes.formControl}>
-          <InputLabel className={classes.formLabel} htmlFor="input-name">
-            Text
-          </InputLabel>
-          <Input
-            className={classes.inputName}
-            id="input-name"
-            name="name"
-            value={date.text}
+      <div className={classes.label}>
+        <Typography variant="h6" gutterBottom>
+          {alarm.label} : {handleAlarmType(alarm)}
+        </Typography>
+      </div>
+      <div className={classes.type}>
+        <FormControl component="fieldset">
+          <RadioGroup
+            aria-label="Alarm type"
+            name="label"
+            value={alarm.label}
             onChange={handleChange}
-            inputProps={{
-              style: {
-                padding: "0"
-              }
-            }}
-          />
+            row
+          >
+            <FormControlLabel
+              value="Time left"
+              control={<Radio color="primary" />}
+              label="Time left"
+              labelPlacement="top"
+            />
+            <FormControlLabel
+              value="On date"
+              control={<Radio color="primary" />}
+              label="On date"
+              labelPlacement="top"
+            />
+          </RadioGroup>
         </FormControl>
       </div>
-      <div className={classes.date}>
+      <div className={classes.alarm}>
         <FormControl className={classes.formControl}>
           <InputLabel className={classes.formLabel} htmlFor="input-day">
             DD
@@ -139,7 +171,7 @@ handleCancel = () => {
             className={classes.inputTwoChars}
             id="input-dD"
             name="day"
-            value={date.day}
+            value={alarm.day}
             onChange={handleChange}
             inputProps={{
               maxLength: "2",
@@ -158,7 +190,7 @@ handleCancel = () => {
             className={classes.inputTwoChars}
             id="input-month"
             name="month"
-            value={date.month}
+            value={alarm.month}
             onChange={handleChange}
             inputProps={{
               maxLength: "2",
@@ -177,7 +209,7 @@ handleCancel = () => {
             className={classes.inputFourChars}
             id="input-year"
             name="year"
-            value={date.year}
+            value={alarm.year}
             onChange={handleChange}
             inputProps={{
               maxLength: "4",
@@ -193,7 +225,7 @@ handleCancel = () => {
             className={classes.inputTwoChars}
             id="input-hour"
             name="hh"
-            value={date.hh}
+            value={alarm.hh}
             onChange={handleChange}
             inputProps={{
               maxLength: "2",
@@ -210,7 +242,7 @@ handleCancel = () => {
             className={classes.inputTwoChars}
             id="input-minute"
             name="mm"
-            value={date.mm}
+            value={alarm.mm}
             onChange={handleChange}
             inputProps={{
               maxLength: "2",

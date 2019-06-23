@@ -18,6 +18,7 @@ import {
 import Checklist from "./Checklist";
 import NoteSettings from "../templates/NoteSettings";
 import Favorite from "../templates/Favorite";
+import AlarmLabel from "../templates/AlarmLabel";
 
 const styles = theme => ({
   root: {
@@ -262,15 +263,7 @@ class NewNote extends Component {
                 multiline
                 fullWidth
               />
-              {alarm && (
-                <Typography
-                  variant="subtitle2"
-                  component="p"
-                  className={classes.alarm}
-                >
-                  {alarm.text} : {alarm.day} - {alarm.month} - {alarm.year}
-                </Typography>
-              )}
+              {alarm && <AlarmLabel alarm={alarm} margin={true} />}
             </>
           )}
           {Input}

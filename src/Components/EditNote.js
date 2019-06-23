@@ -3,12 +3,12 @@ import {
   withStyles,
   Paper,
   InputBase,
-  ClickAwayListener,
-  Typography
+  ClickAwayListener
 } from "@material-ui/core/";
 import Checklist from "./Checklist";
 import NoteSettings from "../templates/NoteSettings";
 import Favorite from "../templates/Favorite";
+import AlarmLabel from "../templates/AlarmLabel";
 
 const styles = theme => ({
   root: {
@@ -33,12 +33,6 @@ const styles = theme => ({
   },
   iconButton: {
     padding: 5
-  },
-  alarm: {
-    backgroundColor: "rgb(251, 140, 0, 0.1)",
-    borderRadius: "0 10px 10px 0",
-    padding: "2px 4px 2px 4px",
-    margin: "2px 0"
   }
 });
 
@@ -199,15 +193,7 @@ class EditNote extends Component {
               fullWidth
               tabIndex="-1"
             />
-            {alarm && (
-              <Typography
-                variant="subtitle2"
-                component="p"
-                className={classes.alarm}
-              >
-                {alarm.text} : {alarm.day} - {alarm.month} - {alarm.year}
-              </Typography>
-            )}
+            {alarm && <AlarmLabel alarm={alarm} margin={true} />}
           </>
           {Input}
           <NoteSettings

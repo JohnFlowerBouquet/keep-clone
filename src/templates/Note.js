@@ -13,6 +13,7 @@ import {
 import { CheckBoxOutlined } from "@material-ui/icons";
 import NoteSettings from "./NoteSettings";
 import Favorite from "./Favorite";
+import AlarmLabel from "./AlarmLabel";
 
 const styles = theme => ({
   root: {
@@ -152,15 +153,7 @@ class Note extends PureComponent {
         <Typography className={classes.title} variant="h6" component="h3">
           {wordToMatch ? this.getHighlightedText(title, wordToMatch) : title}
         </Typography>
-        {alarm && (
-          <Typography
-            variant="subtitle2"
-            component="p"
-            className={classes.alarm}
-          >
-            {alarm.text} : {alarm.day} - {alarm.month} - {alarm.year}
-          </Typography>
-        )}
+        {alarm && <AlarmLabel alarm={alarm} margin={false} />}
         {tasks.length !== 0 && (
           <List className={classes.list}>
             {tasks.map(({ text, isDone, id }, index) => (

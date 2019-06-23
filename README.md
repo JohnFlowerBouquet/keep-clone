@@ -1,5 +1,4 @@
 <a align="center" href="https://johnflowerbouquet.github.io/keep-clone/"><img src="https://johnflowerbouquet.github.io/media/projects/project3.jpg" title="learning-sources" alt="learning sources"></a>
-npm
 
 # keep-clone
 
