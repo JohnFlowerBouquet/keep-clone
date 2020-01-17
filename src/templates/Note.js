@@ -18,9 +18,9 @@ import AlarmLabel from "./AlarmLabel";
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    margin: theme.spacing.unit,
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
+    margin: theme.spacing(),
     position: "relative",
     "&:hover": {
       boxShadow:

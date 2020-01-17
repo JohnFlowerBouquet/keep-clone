@@ -4,7 +4,7 @@ import Header from "./Header";
 import AddNote from "./AddNote";
 import Grid from "./Grid";
 import ModalComponent from "./Modal";
-import { Notes } from "../store";
+import * as store from "../store.json";
 
 const styles = {
   root: {
@@ -14,7 +14,7 @@ const styles = {
 
 class App extends Component {
   state = {
-    Notes,
+    Notes: store.notes,
     wordToMatch: "",
     activeNote: {},
     editMode: false,
@@ -83,11 +83,11 @@ class App extends Component {
       Notes: Notes.map(note =>
         note.id === noteID
           ? {
-              ...note,
-              tasks: note.tasks.map(task =>
-                task.id === taskID ? { ...task, isDone: !task.isDone } : task
-              )
-            }
+            ...note,
+            tasks: note.tasks.map(task =>
+              task.id === taskID ? { ...task, isDone: !task.isDone } : task
+            )
+          }
           : note
       )
     }));

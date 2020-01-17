@@ -11,9 +11,9 @@ import { CheckBoxOutlined, Add } from "@material-ui/icons";
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    margin: theme.spacing.unit * 0.5
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
+    margin: theme.spacing(0.5)
   },
   list: {
     width: "100%",
@@ -64,23 +64,23 @@ class Checklist extends Component {
                 last
                   ? classes.list__itemNew
                   : isDone
-                  ? classes.list__itemDone
-                  : classes.list__item
+                    ? classes.list__itemDone
+                    : classes.list__item
               }
             >
               {last ? (
                 <Add />
               ) : (
-                <Checkbox
-                  checked={isDone}
-                  checkedIcon={<CheckBoxOutlined />}
-                  disableRipple
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleCheck(id);
-                  }}
-                />
-              )}
+                  <Checkbox
+                    checked={isDone}
+                    checkedIcon={<CheckBoxOutlined />}
+                    disableRipple
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleCheck(id);
+                    }}
+                  />
+                )}
               <StyledInput
                 label="List Item"
                 name="text"
